@@ -4,15 +4,6 @@ $(window).load(function (){
 
   var elem = $(".plaquette");
 
-
-  document.onmousemove = function(e){
-    var x = e.pageX;
-    var y = e.pageY;
-   console.log("X is "+x+" and Y is "+y);
-  };
-
-
-
   function hammerIt(elm) {
     hammertime = new Hammer(elm, {});
 
@@ -33,8 +24,6 @@ $(window).load(function (){
     
 
   hammertime.on('tap pan pinch panend pinchend', function(ev) {
-
-    console.log("clientWidth = "+ el.clientWidth);
 
     if (ev.type == "tap" && scale == 1) {
       scale = 2;
@@ -140,7 +129,7 @@ $(window).load(function (){
     if (posY < -max_pos_y) {
         posY = -max_pos_y;
     }
-    */
+    
 
       var plx = elem.width(),
           ply = elem.height(),
@@ -164,6 +153,7 @@ $(window).load(function (){
       posx = posx * scale;
       posy = posy * scale;
       return {positionX: posx, positionY: posy};
+      */
   }
 
 
