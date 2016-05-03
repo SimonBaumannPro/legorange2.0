@@ -1,4 +1,3 @@
-
 const path = require('path');
 const process = require('process');
 const webpack = require('webpack');
@@ -12,6 +11,7 @@ const config = {
 				 'font-awesome',
 				 'touchswipe',
 				 'foundation',
+				 'hammer',
 				 'imports?exports=>false&module=>false!react',
 				 'imports?exports=>false&module=>false!jquery',
 				 'imports?exports=>false&module=>false!webcom',	 
@@ -29,6 +29,7 @@ const config = {
         	'webcom': 'webcom/webcom.js',
         	react: 'react/dist/react.min.js',
         	jquery: 'jquery/dist/jquery.min.js',
+        	'hammer' : 'hammerjs/hammer.min.js',
 			'react-dom': 'react-dom/dist/react-dom.min.js',
 			'font-awesome': 'font-awesome/css/font-awesome.min.css',
 			'foundation' : 'foundation-sites/dist/foundation.min.js',
