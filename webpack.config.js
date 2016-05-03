@@ -31,7 +31,7 @@ const config = {
         	jquery: 'jquery/dist/jquery.min.js',
 			'react-dom': 'react-dom/dist/react-dom.min.js',
 			'font-awesome': 'font-awesome/css/font-awesome.min.css',
-			'foundation' : 'foundation-sites/foundation.min.js',
+			'foundation' : 'foundation-sites/dist/foundation.min.js',
 			'touchswipe' : 'jquery-touchswipe/jquery.touchSwipe.min.js'
         },
         extensions: ["", ".webpack.js", ".web.js", ".js", ".css", ".min.css", ".scss"]
@@ -40,6 +40,10 @@ const config = {
 		loaders: [
 			{ test: /\.js/, loaders: ['babel'], exclude: /node_modules/ },
 			{ test: /\.png$/, loader: 'url-loader?mimetype=image/png'},
+			{ test: /\.jpg$/,
+			  loaders: [ 'file?hash=sha512&digest=hex&name=[hash].[ext]',
+                         'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false' ]
+            },
 			{ test: /\.(eot|woff|woff2|ttf|svg|)(\?\S*)?$/,
 			  loader: 'url?limit=100000&name=[name].[ext]'
 			}	
