@@ -13,6 +13,7 @@ const config = {
 				 'font-awesome',
 				 'touchswipe',
 				 'foundationjs',
+				 'foundationscss',
 				 'hammer',
 				 'imports?exports=>false&module=>false!react',
 				 'imports?exports=>false&module=>false!jquery',
@@ -35,6 +36,7 @@ const config = {
 			'react-dom': 'react-dom/dist/react-dom.min.js',
 			'font-awesome': 'font-awesome/css/font-awesome.min.css',
 			'foundationjs' : 'foundation-sites/dist/foundation.min.js',
+			'foundationscss' : '../src/assets/styles/app.scss',
 			'touchswipe' : 'jquery-touchswipe/jquery.touchSwipe.min.js'
         },
         extensions: ["", ".webpack.js", ".web.js", ".js", ".css", ".min.css", ".scss"]
