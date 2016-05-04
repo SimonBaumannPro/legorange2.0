@@ -1,6 +1,4 @@
 require('./assets/styles/style.css');
-require 'foundation'
-require 'styles/app'
 
 $(window).load(function (){
 

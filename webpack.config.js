@@ -13,7 +13,7 @@ const config = {
 				 'font-awesome',
 				 'touchswipe',
 				 'foundationjs',
-				 'foundationscss',
+				 './src/assets/styles/app.scss',
 				 'hammer',
 				 'imports?exports=>false&module=>false!react',
 				 'imports?exports=>false&module=>false!jquery',
@@ -36,7 +36,6 @@ const config = {
 			'react-dom': 'react-dom/dist/react-dom.min.js',
 			'font-awesome': 'font-awesome/css/font-awesome.min.css',
 			'foundationjs' : 'foundation-sites/dist/foundation.min.js',
-			'foundationscss' : '../src/assets/styles/app.scss',
 			'touchswipe' : 'jquery-touchswipe/jquery.touchSwipe.min.js'
         },
         extensions: ["", ".webpack.js", ".web.js", ".js", ".css", ".min.css", ".scss"]
@@ -47,7 +46,7 @@ const config = {
 			{ test: /\.png$/, loader: 'url-loader?mimetype=image/png'},
 			{
         		test: /\.scss$/,
-        		loader: "style-loader!sass-loader?outputStyle=expanded&includePaths[]=./node_modules/foundation-sites/scss/"
+        		loaders: ['style', 'css', 'sass']
       		},
 			{ 
 			  	test: /\.(eot|woff|woff2|ttf|svg|)(\?\S*)?$/,
