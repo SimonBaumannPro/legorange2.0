@@ -48,6 +48,7 @@
     "imports-loader": "^0.6.5",
     "less": "^2.6.0",
     "less-loader": "^2.2.3",
+    "motion-ui": "^1.2.2",
     "node-sass": "^3.7.0",
     "sass-loader": "^3.2.0",
     "semantic-release": "^4.3.5",
