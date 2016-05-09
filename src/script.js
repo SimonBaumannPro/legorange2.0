@@ -1,4 +1,5 @@
 require('./assets/styles/style.css');
+require('./assets/styles/app.scss');
 
 $(window).load(function (){
 

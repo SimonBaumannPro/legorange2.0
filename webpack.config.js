@@ -1,5 +1,4 @@
 const path = require('path');
-const sass = require('node-sass');
 const process = require('process');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -13,7 +12,6 @@ const config = {
 				 'font-awesome',
 				 'touchswipe',
 				 'foundationjs',
-				 './src/assets/styles/app.scss',
 				 'hammer',
 				 'imports?exports=>false&module=>false!react',
 				 'imports?exports=>false&module=>false!jquery',
@@ -46,18 +44,21 @@ const config = {
 			{ test: /\.png$/, loader: 'url-loader?mimetype=image/png'},
 			{
         		test: /\.scss$/,
-        		loaders: ['style', 'css', 'sass']
+        		loader: "style-loader!css-loader!sass-loader"
       		},
 			{ 
 			  	test: /\.(eot|woff|woff2|ttf|svg|)(\?\S*)?$/,
 			  	loader: 'url?limit=100000&name=[name].[ext]'
 			}	
 		],
-		noParse: [
+		noParse: [	
 			/react(:?\.min)?\.js$/,
 			/jquery\.min\.js$/,
 			/webcom\.js$/
 		]
+	},
+	sassLoader: {
+		includePaths: [path.resolve(__dirname, "node_modules")]
 	},
 	plugins: [
 		new webpack.ProvidePlugin({
