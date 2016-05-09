@@ -6,6 +6,13 @@ $(window).load(function (){
 
   var elem = $(".plaquette");
 
+  var btn_dezoom = $(".zoomspace");
+  
+  if (screen.width > 500) {
+    btn_dezoom.style.visibility = "hidden";
+    btn_dezoom.style.display = "none";
+  }
+
   function hammerIt(elm) {
     hammertime = new Hammer(elm, {});
 
@@ -27,7 +34,7 @@ $(window).load(function (){
 
   hammertime.on('tap pan pinch panend pinchend', function(ev) {
 
-    if (ev.type == "tap" && scale == 1) {
+    if (ev.type == "tap" && scale == 1 && screen.width > 500) {
       scale = 2;
       last_scale = 2;
       posX = ev.center.x * scale;
