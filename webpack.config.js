@@ -44,7 +44,7 @@ const config = {
 			{ test: /\.png$/, loader: 'url-loader?mimetype=image/png'},
 			{
         		test: /\.scss$/,
-        		loader: "style-loader!css-loader!sass-loader"
+        		loaders: ["style", "css", "sass"]
       		},
 			{ 
 			  	test: /\.(eot|woff|woff2|ttf|svg|)(\?\S*)?$/,
@@ -58,8 +58,8 @@ const config = {
 		]
 	},
 	sassLoader: {
-		includePaths: [path.resolve(__dirname, "node_modules")]
-	},
+    	includePaths: [path.resolve(__dirname, "node_modules/foundation-sites/scss")]
+  	},
 	plugins: [
 		new webpack.ProvidePlugin({
 			$: 'jquery',

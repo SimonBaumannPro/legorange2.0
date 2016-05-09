@@ -1,5 +1,6 @@
-require('./assets/styles/style.css');
 require('./assets/styles/app.scss');
+require('./assets/styles/style.css');
+
 
 $(window).load(function (){
 
@@ -40,17 +41,14 @@ $(window).load(function (){
           posY = -max_pos_y;
       } else
       if (posX < max_pos_x*2 && posY < max_pos_y*2) {
-        alert("haut-gauche");
           posX = max_pos_x;
           posY = max_pos_y;
       } else
       if (posX > max_pos_x*2 && posY < max_pos_y*2) {
-        alert("haut-droit");
           posX = -max_pos_x;
           posY = +max_pos_y;
       } else
       if (posX > max_pos_x*2 && posY > max_pos_y*2) {
-        alert("bas-droit");
           posX = -max_pos_x;
           posY = -max_pos_y;
       }
@@ -211,7 +209,7 @@ $(window).load(function (){
 
 
 
-// appel de la fonction permettant de gérer le zoom du pinch
+// appel de la fonction permettant de gérer les évennements tactiles
 hammerIt(elem[0]);
 
   var webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__;
