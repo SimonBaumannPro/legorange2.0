@@ -33,7 +33,7 @@
     display: inline-block;
     font-size: 16px;
     border-radius: 15px;
-
+    z-index: 2;
 }
 
 .logo_webcom {
@@ -67,7 +67,7 @@ hr{
     margin-right: 10px;
     margin-left: 10px;
     position: absolute;
-    z-index: 10;
+    z-index: 1;
     /*border-radius: 20px;*/
     background: url(../images/lego_orange_tile_white.png) no-repeat;
     background-size: 30px 30px;
