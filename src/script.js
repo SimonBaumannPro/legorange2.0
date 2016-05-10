@@ -4,10 +4,14 @@ require('./assets/styles/style.css');
 
 $(window).load(function (){
 
-  var elem = $(".plaquette");
+  $(document).foundation();
 
-  var btn_dezoom = $(".zoomspace");
-  
+  var elem = $(".plaquette");
+  var btn_dezoom = document.getElementById('btn_dezoom');
+  var offCanvas = $("#offCanvasRight");
+
+/* ------------ Gestion du tactile ------------ */
+
   if (screen.width > 500) {
     btn_dezoom.style.visibility = "hidden";
     btn_dezoom.style.display = "none";
@@ -15,7 +19,6 @@ $(window).load(function (){
 
   function hammerIt(elm) {
     hammertime = new Hammer(elm, {});
-
 
     var posX = 0,
       posY = 0,
@@ -34,7 +37,8 @@ $(window).load(function (){
 
   hammertime.on('tap pan pinch panend pinchend', function(ev) {
 
-    if (ev.type == "tap" && scale == 1 && screen.width > 500) {
+    // la 2ème condition empèche le dessin continu sur la plaquette
+    if (ev.type == "tap" && scale == 1 && screen.width < 500) {
       scale = 2;
       last_scale = 2;
       posX = ev.center.x * scale;
@@ -59,10 +63,8 @@ $(window).load(function (){
           posX = -max_pos_x;
           posY = -max_pos_y;
       }
-
       last_posX = posX;
       last_posY = posY;
-
     } 
 
     //pan    
@@ -115,55 +117,7 @@ $(window).load(function (){
       scale = 1;
       last_scale = 1;
     }
-}
-
-
-  // A ENLEVER
-  function newPosition(clx, cly, scale) {
-
-    /*max_pos_x = Math.ceil((scale - 1) * el.clientWidth / 2);
-    max_pos_y = Math.ceil((scale - 1) * el.clientHeight / 2);
-    if (posX > max_pos_x) {
-        posX = max_pos_x;
-    }
-    if (posX < -max_pos_x) {
-        posX = -max_pos_x;
-    }
-    if (posY > max_pos_y) {
-        posY = max_pos_y;
-    }
-    if (posY < -max_pos_y) {
-        posY = -max_pos_y;
-    }
-    
-
-      var plx = elem.width(),
-          ply = elem.height(),
-          posx, posy;
-
-      if (clx < plx/2) {
-        posx = clx;
-        if (cly < ply/2) {
-          posy = cly;
-        } else {
-          posy = -cly;
-        }
-      } else {
-        posx = -clx;
-        if (cly < ply/2) {
-          posy = cly;
-        } else {
-          posy = -cly;
-        }
-      }
-      posx = posx * scale;
-      posy = posy * scale;
-      return {positionX: posx, positionY: posy};
-      */
-  }
-
-
-  var offCanvas = $("#offCanvasRight");
+} 
 
  $(function() {      
       $("body").swipe( {
@@ -229,13 +183,6 @@ hammerIt(elem[0]);
   var authData;
 
 
-  /* ------------ Gestion du tactile ------------ */
-      
-
-
-
-
-
   // Ici commence le code du "backend"
   var legobase = new Webcom(webcom_url);
 
@@ -295,35 +242,21 @@ hammerIt(elem[0]);
   // Callback sur changement d'une brique. Dans notre cas c'est juste la couleur qui change
   legobase.child(domain).on('child_changed', function(snapshot) {
     var brick=snapshot.val();
-    bricks[brick.x+"-"+brick.y].removeClass().addClass("brick "+brick.color+" "+brick.uid.replace(":", "_"));
-
-    preview_bricks[brick.x+"-"+brick.y].removeClass().addClass("preview_brick "+brick.color);
-
-    if (authData && brick.uid && brick.uid == authData.uid && $("#view_my_bricks").is(":checked")) {
-      bricks[brick.x+"-"+brick.y].addClass("view_owner");
-    }
-  q});
+    bricks[brick.x+"-"+brick.y].removeClass().addClass("brick "+brick.color+" "+brick.uid.replace(":", "_"));  
+  });
   
   // Callback sur l'ajout d'une nouvelle brick
   legobase.child(domain).on('child_added', function(snapshot) {
     var brick=snapshot.val();
-    var brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (20*brick.y)+"px").css('left', (20*brick.x)+"px");
+    var brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (30*brick.y)+"px").css('left', (30*brick.x)+"px");
 
     if (brick.uid) {
       brick_div.addClass(brick.uid.replace(":", "_"));
     }
     
     bricks[brick.x+"-"+brick.y]=brick_div;
-    if (authData && brick.uid && brick.uid == authData.uid && $("#view_my_bricks").is(":checked")) {
-      bricks[brick.x+"-"+brick.y].addClass("view_owner");
-    }
     
-    $("body").append(brick_div);
-
-    var brick_preview=$('<div>', {class: "preview_brick "+brick.color}).css('top', (brick.y)+"px").css('left', (brick.x)+"px");
-    preview_bricks[brick.x+"-"+brick.y]=brick_preview;
-    $("#preview_div").append(brick_preview);
-
+    $(".plaquette").append(brick_div);
 	  $("#bricks_count").html(Object.keys(bricks).length);
   });
 
@@ -333,9 +266,7 @@ hammerIt(elem[0]);
 
     var brick=snapshot.val();
     bricks[brick.x+"-"+brick.y].remove();
-    preview_bricks[brick.x+"-"+brick.y].remove();
     delete bricks[brick.x+"-"+brick.y];
-    delete preview_bricks[brick.x+"-"+brick.y];
 	  $("#bricks_count").html(Object.keys(bricks).length);
   });
 
@@ -495,9 +426,8 @@ hammerIt(elem[0]);
   }
 
   if (! /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-    toggle_opt("preview");
 
-    $("body").on('mousedown', function(e){
+    $(".plaquette").on('mousedown', function(e){
   	  e.preventDefault();
       var target = $( e.target );
       var options_div=target.closest(".options");
@@ -511,8 +441,8 @@ hammerIt(elem[0]);
         mousemove : function(e){
         e.preventDefault();
         if (options_div.length==0) {
-          var x=parseInt(e.pageX / 20);
-          var y=parseInt(e.pageY / 20);
+          var x=parseInt(e.pageX / 30);
+          var y=parseInt(e.pageY / 30);
           var new_move=x+"-"+y;
           if (new_move!=last_move) {
             updatePos(x,y);
@@ -535,11 +465,11 @@ hammerIt(elem[0]);
     });
   }
 
-  $("body").bind("click", function(e){
+  $(".plaquette").bind("click", function(e){
 	  var target = $( e.target );
     if (target.closest(".options").length==0) {
-      var x=parseInt(e.pageX / 20);
-      var y=parseInt(e.pageY / 20);
+      var x=parseInt(e.pageX / 30);
+      var y=parseInt(e.pageY / 30);
       updatePos(x,y);
     }
   });
@@ -551,7 +481,4 @@ hammerIt(elem[0]);
       change_mode("draw");
     }
   });
-
-
-
 });
