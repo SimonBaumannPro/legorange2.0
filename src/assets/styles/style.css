@@ -114,6 +114,7 @@ hr{
     cursor: pointer;
     position: inherit;
     display: inline-block;
+    margin: 7px;
 }
 
 .colors .active {
@@ -121,7 +122,7 @@ hr{
 }
 
 .ul-drawTools {
-    height:200px!important;
+    height:200px;
     margin-left:0px!important;
     padding-top:0px!important;
 }
@@ -146,6 +147,17 @@ hr{
     margin-top: 12px;
 }
 
+.drawTools-buttons-container {
+    background-color:grey;
+    height:50%
+}
+
+.container-color {
+    background-color:grey;
+    height:50%;
+    display:flex;
+}
+
 .container {
     padding-top: -10px;
     width: auto;
@@ -159,11 +171,12 @@ hr{
     margin-top:18px; 
     margin-bottom:18px; 
     margin-left:48px;
-    width: 3.5em;
-    height: 3.5em;
+    width: 4.2em;
+    height: 4.2em;
     position: relative;
     background-color:transparent;
     border-radius: 40px;
+    vertical-align: middle;
 }
 .tools-button:hover {
     background-color: transparent;
@@ -177,7 +190,7 @@ hr{
 
 .whiteSquare {
     top: 0;
-    font-size: 3.5em;
+    font-size: 4em;
 }
 
 
@@ -187,9 +200,10 @@ hr{
     vertical-align:middle;
     text-align:center;
     padding-top:20px!important;
+    outline:0;
 }
 
-.submenu {
+.menu-submenu {
     height: 40px;
     padding-top:10px;
     vertical-align:middle;

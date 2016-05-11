@@ -17,10 +17,10 @@
           <!-- Menu -->
           <ul class="vertical menu" data-accordion-menu>
             <li>
-              <a class="menu-title" href="#">DRAW TOOLS</a>
-              <ul style="height:200px; margin-left:0px; padding-top:0px;">
+              <a id="titleDT" class="menu-title" href="#">DRAW TOOLS</a>
+              <ul class="ul-drawTools">
                 <div class="container">
-                  <div style="background-color:grey; height:50%">
+                  <div class="drawTools-buttons-container">
                     <span id="draw"  class="fa-stack fa-lg button fa-2x tools-button">
                       <i class="fa fa-square fa-stack-2x whiteSquare"></i>
                       <i class="fa fa-pencil fa-stack-1x tools-icons"></i>
@@ -30,11 +30,11 @@
                       <i class="fa fa-eraser fa-stack-1x tools-icons"></i>
                     </span>
                     <span id="eraseAll" class="fa-stack fa-lg button fa-2x tools-button">
-                      <i class="fa fa-square fa-stack-2x whiteSquare"></i>
+                      <i class="fa fa-square fa-stack-2x whiteSquare" style="color:#800000!important"></i>
                       <i class="fa fa-trash fa-stack-1x tools-icons"></i>
                     </span>
                   </div>
-                  <div style="background-color:grey; height:50%; display:flex;">
+                  <div class="container-color">
                     <div class="colors">
                       <span class="brick white active"></span>
                       <span class="brick green"></span>
@@ -50,10 +50,10 @@
             <li>
               <a class="menu-title" href="#">SOCIAL</a>
               <ul style="height:100px">
-                <li class="submenu">
+                <li class="menu-submenu">
                   <a class="title"href="#">Chat</a>
                 </li>
-                <li class="submenu">
+                <li class="menu-submenu">
                   <a class="title" href="#">Users</a>
                 </li>
               </ul>

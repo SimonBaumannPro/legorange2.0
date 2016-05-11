@@ -402,17 +402,32 @@ hammerIt(elem[0]);
       $("."+opt_name+"_box").hide();
     }
   }
-    
+  
+  /* empèche l'affichage des couleurs lors du déroulement de la liste si on est en mode "erase" */
+  $("#titleDT").click(function() {
+    if (mode == "erase" || mode == "eraseAll") {
+      $(".ul-drawTools").attr("style", "height: 100px");
+      $(".drawTools-buttons-container").css("height", "100%");
+      $(".color-list").hide();
+    }
+  });
+
   $(".button").click(function(e){
     change_mode($(this).attr("id"))
   });
     
   function change_mode(new_mode) {
     mode=new_mode;
-    if (mode=="draw")
-      $(".colors").show();
-    else
-      $(".colors").hide();
+    if (mode=="draw") {
+      $(".ul-drawTools").attr("style", "height: 200px");
+      $(".drawTools-buttons-container").css("height", "50%");
+      $(".color-container").show();
+    }
+    else {
+      $(".ul-drawTools").attr("style", "height: 100px");
+      $(".drawTools-buttons-container").css("height", "100%");
+      $(".color-list").hide();      
+    }
 
     ["draw", "erase"].forEach(function(action){
       if (action == mode) {
