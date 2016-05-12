@@ -249,6 +249,7 @@ hammerIt(elem[0]);
   legobase.child(domain).on('child_added', function(snapshot) {
     var brick=snapshot.val();
     var brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (30*brick.y)+"px").css('left', (30*brick.x)+"px");
+    console.log("brick.y = "+brick.y + " et brick.x = "+brick.x);
 
     if (brick.uid) {
       brick_div.addClass(brick.uid.replace(":", "_"));
@@ -448,8 +449,8 @@ hammerIt(elem[0]);
       var options_div=target.closest(".options");
       var position = options_div.offset() || target.offset();
       var initialized = {
-        x : position.left - e.pageX,
-        y : position.top - e.pageY
+        x :  e.pageX,
+        y :  e.pageY
       };
     
   	  var handlers = {
@@ -459,11 +460,13 @@ hammerIt(elem[0]);
           var x=parseInt(e.pageX / 30);
           var y=parseInt(e.pageY / 30);
           var new_move=x+"-"+y;
+          console.log("options_div.length==0 - " + options_div);
           if (new_move!=last_move) {
             updatePos(x,y);
           }
           last_move=new_move;
           } else {
+            console.log("options_div - ");
             options_div.css({
               left : ( initialized.x + e.pageX - $(document).scrollLeft() ) + 'px',
               top : ( initialized.y + e.pageY - $(document).scrollTop() ) + 'px',
