@@ -1,6 +1,7 @@
 
 body {
     overflow: hidden;
+    zoom:1;
 }
 
 .fixed {
@@ -172,16 +173,15 @@ hr{
 }
 
 .tools-button {
-    margin-top:18px; 
-    margin-bottom:18px; 
-    margin-left:48px;
+    margin-top:18px !important;  
+    margin-bottom:18px !important; 
+    margin-left:48px !important;
     width: 4.2em;
     height: 4.2em;
     position: relative;
-    background-color:transparent;
-    border-radius: 40px;
-    vertical-align: middle;
+    background-color:transparent !important;
 }
+
 .tools-button:hover {
     background-color: transparent;
 }
