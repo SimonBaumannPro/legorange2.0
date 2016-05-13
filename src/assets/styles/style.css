@@ -130,7 +130,7 @@ hr{
     margin:auto;
 }
 
-.colors .brickMenu {
+.colors .brick {
     cursor: pointer;
     position: inherit;
     display: inline-block;

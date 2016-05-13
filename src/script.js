@@ -12,7 +12,8 @@ $(window).load(function (){
   var eraseAll = $("#eraseAll");
 
 
- elem.css('height', $("document").height() + " !important");
+ elem.css('height', "100vmax");
+ elem.css('width', "100vmax");
 /* ------------ Gestion du tactile ------------ */
 
   if (screen.width > 500) {
@@ -205,11 +206,19 @@ hammerIt(elem[0]);
     if (!authData)
       return;
 
+    /*
+    if ($("body").scale != 1) {
+      console.log('ok');
+       x = 20;
+       y = 20;
+    }
+    */
+
     //console.log(x+"-"+y);
     // On "instancie" une nouvelle brique avec comme id "x-y" (c'est plus lisible coté forge)
     var brick=legobase.child(domain+"/"+x+"-"+y);
 
-    // On regarde si on a déjà une valeur pour cette position
+    // On regarde si on a déjà une valeur pour cette positon
     brick.once("value", function(currentData) {
       if (currentData.val() === null) {
         // il n'y avait pas encore de brique on l'ajoute avec la couleur actuellement sélectionné
@@ -411,7 +420,7 @@ hammerIt(elem[0]);
   
   /* empèche l'affichage des couleurs lors du déroulement de la liste si on est en mode "erase" */
   $("#titleDT").click(function() {
-    if (mode == "erase" || mode == "eraseAll") {
+    if (mode == "erase") {
       $(".ul-drawTools").attr("style", "height: 100px");
       $(".drawTools-buttons-container").css("height", "100%");
       $(".color-list").hide();
@@ -461,14 +470,11 @@ hammerIt(elem[0]);
   	  var handlers = {
         mousemove : function(e){
         e.preventDefault();
-        var x,y;
+
         if (options_div.length==0) {
           x=parseInt(e.pageX / 30);
           y=parseInt(e.pageY / 30);
-          if (screen.width < 500) {
-            x = x*2;
-            y = y*2;  
-          } 
+
           var new_move=x+"-"+y;
           if (new_move!=last_move) {
             updatePos(x,y);
@@ -498,8 +504,8 @@ hammerIt(elem[0]);
       x=parseInt(e.pageX / 30);
       y=parseInt(e.pageY / 30);
       if (screen.width < 500) {
-        x = x*2;
-        y = y*2;  
+        x = x/2;
+        y = y/2;  
       } 
       updatePos(x,y);
     }
