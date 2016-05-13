@@ -81,6 +81,21 @@ hr{
     /*outline: 2px solid black;*/
 }
 
+.brickMenu {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    /*margin-right: 10px;
+    margin-left: 10px; */
+    position: absolute;
+    z-index: 1;
+    /*border-radius: 20px;*/
+    background: url(../images/lego_orange_tile_white.png) no-repeat;
+    background-size: 30px 30px;
+    background-blend-mode: multiply;    /*pour l'affichage des briques en couleur */
+    /*outline: 2px solid black;*/
+}
+
 .white {
 	background-color: white;
 }
@@ -115,7 +130,7 @@ hr{
     margin:auto;
 }
 
-.colors .brick {
+.colors .brickMenu {
     cursor: pointer;
     position: inherit;
     display: inline-block;

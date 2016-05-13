@@ -9,6 +9,7 @@ $(window).load(function (){
   var elem = $(".plaquette");
   var btn_dezoom = document.getElementById('btn_dezoom');
   var offCanvas = $("#offCanvasRight");
+  var eraseAll = $("#eraseAll");
 
 
  elem.css('height', $("document").height() + " !important");
@@ -170,14 +171,12 @@ $(window).load(function (){
          }
   });
 
-
-
+  
 // appel de la fonction permettant de gérer les évennements tactiles
 hammerIt(elem[0]);
 
   var webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__;
   var bricks={};
-  var preview_bricks={};
   var last_move="";
   var color="white";
   var mode="draw";
@@ -195,12 +194,18 @@ hammerIt(elem[0]);
     }
   }
 
+  /* Supprime toutes les briques de la plaquettes */
+  eraseAll.click(function() {
+    legobase.child(domain).remove();
+  });
+
+
   // Méthode appelée pour créer/modifier/supprimer une brique à la position x,y
   function updatePos(x, y) {
     if (!authData)
       return;
 
-    console.log(x+"-"+y);
+    //console.log(x+"-"+y);
     // On "instancie" une nouvelle brique avec comme id "x-y" (c'est plus lisible coté forge)
     var brick=legobase.child(domain+"/"+x+"-"+y);
 
@@ -260,8 +265,7 @@ hammerIt(elem[0]);
     
     $(".plaquette").append(brick_div);
 	  $("#bricks_count").html(Object.keys(bricks).length);
-  });
-
+  }); 
 
   // Callback sur la suppression d'une brique
   legobase.child(domain).on('child_removed', function(snapshot) {
