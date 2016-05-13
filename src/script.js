@@ -10,6 +10,8 @@ $(window).load(function (){
   var btn_dezoom = document.getElementById('btn_dezoom');
   var offCanvas = $("#offCanvasRight");
 
+
+ elem.css('height', $("document").height() + " !important");
 /* ------------ Gestion du tactile ------------ */
 
   if (screen.width > 500) {
@@ -455,22 +457,27 @@ hammerIt(elem[0]);
   	  var handlers = {
         mousemove : function(e){
         e.preventDefault();
+        var x,y;
         if (options_div.length==0) {
-          var x=parseInt(e.pageX / 30);
-          var y=parseInt(e.pageY / 30);
+          x=parseInt(e.pageX / 30);
+          y=parseInt(e.pageY / 30);
+          if (screen.width < 500) {
+            x = x*2;
+            y = y*2;  
+          } 
           var new_move=x+"-"+y;
           if (new_move!=last_move) {
             updatePos(x,y);
           }
           last_move=new_move;
-          } else {
-            options_div.css({
-              left : ( initialized.x + e.pageX - $(document).scrollLeft() ) + 'px',
-              top : ( initialized.y + e.pageY - $(document).scrollTop() ) + 'px',
-              bottom: 'inherit',
-              right: 'inherit',
-            });
-          }
+        } else {
+           options_div.css({
+            left : ( initialized.x + e.pageX - $(document).scrollLeft() ) + 'px',
+            top : ( initialized.y + e.pageY - $(document).scrollTop() ) + 'px',
+            bottom: 'inherit',
+            right: 'inherit',
+           });
+        }
         },
         mouseup : function(e){
           $(this).off(handlers);   
@@ -482,9 +489,14 @@ hammerIt(elem[0]);
 
   $(".plaquette").bind("click", function(e){
 	  var target = $( e.target );
+    var x,y;
     if (target.closest(".options").length==0) {
-      var x=parseInt(e.pageX / 30);
-      var y=parseInt(e.pageY / 30);
+      x=parseInt(e.pageX / 30);
+      y=parseInt(e.pageY / 30);
+      if (screen.width < 500) {
+        x = x*2;
+        y = y*2;  
+      } 
       updatePos(x,y);
     }
   });
