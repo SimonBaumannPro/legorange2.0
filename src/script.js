@@ -222,7 +222,7 @@ hammerIt(elem[0]);
     brick.once("value", function(currentData) {
       if (currentData.val() === null) {
         // il n'y avait pas encore de brique on l'ajoute avec la couleur actuellement sélectionné
-        if (mode=="draw") 
+        if (mode=="draw" || mode=="eraseAll") 
           brick.set({color: color, x: x, y: y, uid: authData.uid});
       } else {
         // il y a déjà une brique à cet emplacement. 
@@ -230,7 +230,7 @@ hammerIt(elem[0]);
         if (mode=="erase")
           brick.set(null);
         // En mode "draw" si la couleur de la brique est modifiée on averti le backend
-        if (mode=="draw") // && currentData.color != color) 
+        if (mode=="draw" || mode=="eraseAll") // && currentData.color != color) 
           brick.set({color: color, x: x, y: y, uid: authData.uid});
       }
     });
@@ -433,7 +433,7 @@ hammerIt(elem[0]);
     
   function change_mode(new_mode) {
     mode=new_mode;
-    if (mode=="draw") {
+    if (mode=="draw" || mode=="eraseAll") {
       $(".ul-drawTools").attr("style", "height: 200px");
       $(".drawTools-buttons-container").css("height", "50%");
       $(".color-container").show();
