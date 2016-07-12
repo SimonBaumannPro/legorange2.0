@@ -6,17 +6,17 @@ $(window).load(function (){
 
   $(document).foundation();
 
-  var elem = $(".plaquette");
+  var elem = $(".drawspace");
   var btn_dezoom = document.getElementById('btn_dezoom');
   var offCanvas = $("#offCanvasRight");
   var eraseAll = $("#eraseAll");
 
+  //elem.css('height', "100vmax");
+  //elem.css('width', "100vmax");
 
- elem.css('height', "100vmax");
- elem.css('width', "100vmax");
-/* ------------ Gestion du tactile ------------ */
+  /* ------------ Gestion du tactile ------------ */
 
-  if (screen.width > 500) {
+  if (screen.width > 640 && screen.height > 480) {
     btn_dezoom.style.visibility = "hidden";
     btn_dezoom.style.display = "none";
   }
@@ -41,8 +41,9 @@ $(window).load(function (){
 
   hammertime.on('tap pan pinch panend pinchend', function(ev) {
 
-    // la 2ème condition empèche le dessin continu sur la plaquette
+    // la 2ème condition empèche le dessin continu sur le drawspace
     if (ev.type == "tap" && scale == 1 && screen.width < 500) {
+
       scale = 2;
       last_scale = 2;
       posX = ev.center.x * scale;
@@ -162,16 +163,15 @@ $(window).load(function (){
 
   /* Disable Ctrl+mouseWheel Zoom on cross-browser */
   $(document).keydown(function(event) {
-            if (event.ctrlKey==true && (event.which == '61' || event.which == '107' || event.which == '173' || event.which == '109'  || event.which == '187'  || event.which == '189'  ) ) {
-    event.preventDefault();
-       }
+      if (event.ctrlKey==true && (event.which == '61' || event.which == '107' || event.which == '173' || event.which == '109'  || event.which == '187'  || event.which == '189'  ) ) {
+                event.preventDefault();
+      }
   });
   $(window).bind('mousewheel DOMMouseScroll', function (event) {
-         if (event.ctrlKey == true) {
-       event.preventDefault();
-         }
+      if (event.ctrlKey == true) {
+          event.preventDefault();
+      }
   });
-
   
 // appel de la fonction permettant de gérer les évennements tactiles
 hammerIt(elem[0]);
@@ -195,26 +195,21 @@ hammerIt(elem[0]);
     }
   }
 
-  /* Supprime toutes les briques de la plaquettes */
+  /* Supprime toutes les briques du drawspace */
   eraseAll.click(function() {
     legobase.child(domain).remove();
   });
 
-
   // Méthode appelée pour créer/modifier/supprimer une brique à la position x,y
   function updatePos(x, y) {
-    if (!authData)
-      return;
 
     /*
     if ($("body").scale != 1) {
       console.log('ok');
        x = 20;
        y = 20;
-    }
-    */
+    } */
 
-    //console.log(x+"-"+y);
     // On "instancie" une nouvelle brique avec comme id "x-y" (c'est plus lisible coté forge)
     var brick=legobase.child(domain+"/"+x+"-"+y);
 
@@ -234,25 +229,6 @@ hammerIt(elem[0]);
           brick.set({color: color, x: x, y: y, uid: authData.uid});
       }
     });
-
-    // Utilisation de la méthode transaction() qui permet de vérifier si une brique était déjà positionnée (élément existant)
-    /*
-       brick.transaction(function(currentData) {
-       if (currentData === null) {
-       // il n'y avait pas encore de brique on l'ajoute avec la couleur actuellement sélectionnée
-       if (mode=="draw") 
-       return {color: color, x: x, y: y, uid: authData.uid};
-       } else {
-       // il y a déjà une brique à cet emplacement. 
-       // En mode "erase" on supprime le bloc
-       if (mode=="erase")
-       brick.remove();
-       // En mode "draw" si la couleur de la brique est modifiée on averti le backend
-       if (mode=="draw") // && currentData.color != color) 
-       return {color: color, x: x, y: y, uid: authData.uid};
-       }
-       });
-     */
   }
 
   // Callback sur changement d'une brique. Dans notre cas c'est juste la couleur qui change
@@ -272,7 +248,7 @@ hammerIt(elem[0]);
     
     bricks[brick.x+"-"+brick.y]=brick_div;
     
-    $(".plaquette").append(brick_div);
+    $(".drawspace").append(brick_div);
 	  $("#bricks_count").html(Object.keys(bricks).length);
   }); 
 
@@ -293,130 +269,15 @@ hammerIt(elem[0]);
   } else {
     legobase.resume(checkAuth);
   }
-    
-  $("#register").click(function(){
-    $("#simple_register").show();
-  });
-  $(".cancel").click(function(){
-    $(this).parent().hide();
-  });
-
-  $("#register_submit").click(function(){
-    var user_id=$("#register_user_id").val();
-    var password1=$("#register_password1").val();
-    var password2=$("#register_password2").val();
-    if (user_id!=null && user_id.match(/\@/)) {
-      if (password1!= null && password1!="" && password1.length>6) {
-        if (password1==password2) {
-          legobase.createUser(user_id, password1, checkAuth );
-        } else {
-          $("#register_error").html("Les mots de passe ne correspondent pas");
-        }
-      } else {
-        $("#register_error").html("Mot de passe invalide (>=6 caractères)");
-      }
-    } else {
-      $("#register_error").html("Adresse e-mail invalide");
-    }
-  });
-
-  function checkAuth(error, user) {
-    if (error) {
-      $("#login_error").html(error);
-      authData=null;
-      console.log("auth error: " + error);
-    } else {
-      if (user) {
-        console.log("auth OK: " + JSON.stringify(user));
-        $("#simple_login").hide();
-        authData={uid: user.uid, provider: "local", local: {displayName: user.email}};
-        legobase.child("users").child(authData.uid).set(authData);
-        $("#user_name").html(authData[authData.provider].displayName.replace(/@/, "<br/>@"));
-        $("#connect").hide();
-        $("#disconnect").show();
-        $("#erase").show();
-        $("#draw").show();
-        $(".colors").show();
-      } else {
-        console.log("not authenticated");
-        authData=null;
-        $(".owner").removeClass("view_owner");
-        $("#connect").show();
-        $("#disconnect").hide();
-        $("#erase").hide();
-        $("#draw").hide();
-        $(".colors").hide();
-      }
-    }
-  }
-
-  $("#login_submit").click(function(){
-    var user_id=$("#user_id").val();
-    var password=$("#password").val();
-    if (user_id!=null && user_id.match(/\@/)) {
-      if (password!= null && password!="") {
-        legobase.authWithPassword({
-          email : user_id,
-          password : password,
-          rememberMe : true
-        }, checkAuth);
-      } else {
-        $(".login_error").html("Veuillez renseigner votre mot de passe");
-      }
-    } else {
-      $("#login_error").html("Adresse e-mail invalide");
-    }
-  });
-    
-  $(".login").click(function(){
-    var provider=$(this).attr("provider");
-    if (provider=="simple") {
-      $(".simple_login").show();
-    } else {
-      //TODO
-    }        
-  });
-
-  $("#logout").click(function(){
-    legobase.logout();
-  });
 
   // Ici se termine le code du "backend".
-  //Le reste sert à (mal) géré les évèvements souris/écran tactile
-  $("#view_my_bricks").change(function() {
-    if ($(this).is(":checked") && authData && authData.uid) {
-      $("."+authData.uid.replace(":", "_")).addClass("view_owner");
-    } else {
-      $("."+authData.uid.replace(":", "_")).removeClass("view_owner");
-    }
-  });
 
-
-  $(".close").click(function() {toggle_opt($(this).parent().attr("opt"))});
-   
+  /* gère la surbrillance d'une couleur active */
   $(".colors .brick").click(function(e) {
     $(".colors .brick").removeClass("active");
     $(this).addClass("active");
     color=$(this).attr('class').replace(/\s*(brick|active)\s*/g, '');
   });
-
-  // $(".little_button").click(function(e){
-  //   var opt=$(this).attr("id");
-  //   toggle_opt(opt);
-  // });
-
-  // function toggle_opt(opt_name) {
-  //   var sub_button=$("#"+opt_name+" :nth-child(1)");
-  //   if (sub_button.hasClass("fa-square-o")) {
-  //     $("#"+opt_name+" :nth-child(1)").removeClass("fa-square-o").addClass("fa-square");
-  //     $("#"+opt_name+" :nth-child(2)").removeClass("fa-inverse").addClass("fa-inverse");
-  //     $("."+opt_name+"_box").show();
-  //   } else {
-  //     $("#"+opt_name+" :nth-child(1)").removeClass("fa-square").addClass("fa-square-o");
-  //     $("#"+opt_name+" :nth-child(2)").removeClass("fa-inverse");
-  //     $("."+opt_name+"_box").hide();
-  //   }
-  // }
   
   /* empèche l'affichage des couleurs lors du déroulement de la liste si on est en mode "erase" */
   $("#titleDT").click(function() {
@@ -447,21 +308,11 @@ hammerIt(elem[0]);
       $("#draw"+" :nth-child(1)").removeClass("fa-square").addClass("fa-square-o");
       $(".color-list").hide();      
     }
-
-    ["draw", "erase", "eraseAll"].forEach(function(action){
-      if (action == "eraseAll" || action == "draw") {
-        //$("#draw"+" :nth-child(1)").removeClass("fa-square-o").addClass("fa-square");
-        //$("#erase"+" :nth-child(1)").removeClass("fa-square").addClass("fa-square");
-      } else {
-        //$("#erase"+" :nth-child(1)").removeClass("fa-square-o").addClass("fa-square");
-        //$("#draw"+" :nth-child(1)").removeClass("fa-square").addClass("fa-square-o");
-      } 
-    });
   }
 
   if (! /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 
-    $(".plaquette").on('mousedown', function(e){
+    $(".drawspace").on('mousedown', function(e){
   	  e.preventDefault();
       var target = $( e.target );
       var options_div=target.closest(".options");
@@ -478,7 +329,6 @@ hammerIt(elem[0]);
         if (options_div.length==0) {
           x=parseInt(e.pageX / 30);
           y=parseInt(e.pageY / 30);
-
           var new_move=x+"-"+y;
           if (new_move!=last_move) {
             updatePos(x,y);
@@ -501,10 +351,10 @@ hammerIt(elem[0]);
     });
   }
 
-  $(".plaquette").bind("click", function(e){
+  /* Gère le click simple (ajout/suppression de briques) sur le drawspace  */
+  $(".drawspace").bind("click", function(e){
 	  var target = $( e.target );
     var x,y;
-    if (target.closest(".options").length==0) {
       x=parseInt(e.pageX / 30);
       y=parseInt(e.pageY / 30);
       if (screen.width < 500) {
@@ -512,14 +362,5 @@ hammerIt(elem[0]);
         y = y/2;  
       } 
       updatePos(x,y);
-    }
-  });
-
-  $(document).keypress(function(e) {
-    if (e.which==101 || e.which==69) {
-      change_mode("erase");
-    }else if (e.which==100 || e.which==68) {
-      change_mode("draw");
-    }
   });
 });
