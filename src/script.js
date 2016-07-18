@@ -344,24 +344,25 @@ hammerIt(elem[0]);
     
   	  var handlers = {
         mousemove : function(e){
-        e.preventDefault();
-
-        if (options_div.length==0) {
-          x=parseInt(e.pageX / bricksize);
-          y=parseInt(e.pageY / bricksize);
-          var new_move=x+"-"+y;
-          if (new_move!=last_move) {
-            updatePos(x,y);
+          e.preventDefault();
+          if (options_div.length==0) {
+            x=parseInt(e.pageX / bricksize);
+            y=parseInt(e.pageY / bricksize);
+            var new_move=x+"-"+y;
+            // Disable brick overflow outside drawspace
+            if (new_move!=last_move && e.pageX < elem.width() && e.pageY < elem.height()) {
+              updatePos(x,y);
+            }
+            last_move=new_move;
+          } else {
+            alert('lala');
+             options_div.css({
+              left : ( initialized.x + e.pageX - $(document).scrollLeft() ) + 'px',
+              top : ( initialized.y + e.pageY - $(document).scrollTop() ) + 'px',
+              bottom: 'inherit',
+              right: 'inherit',
+             });
           }
-          last_move=new_move;
-        } else {
-           options_div.css({
-            left : ( initialized.x + e.pageX - $(document).scrollLeft() ) + 'px',
-            top : ( initialized.y + e.pageY - $(document).scrollTop() ) + 'px',
-            bottom: 'inherit',
-            right: 'inherit',
-           });
-        }
         },
         mouseup : function(e){
           $(this).off(handlers);   
@@ -385,18 +386,13 @@ hammerIt(elem[0]);
 
   var leftPos;
   $("#buttonToggle").click(function() {
-    
     if (!offCanvas.hasClass("is-open")) {
       leftPos = $('body').scrollLeft();
       $("body").animate({scrollLeft: leftPos + 300}, 800);
     } else {
-      $("body").animate({scrollLeft: leftPos - 200}, 800);
+      $("body").animate({scrollLeft: leftPos - 300}, 800);
     }
-    
-  
   })
-
-
 });
 
 
