@@ -2,7 +2,10 @@ require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
 
 
+
 $(window).load(function (){
+
+
 
   $(document).foundation();
 
@@ -10,13 +13,30 @@ $(window).load(function (){
   var btn_dezoom = document.getElementById('btn_dezoom');
   var offCanvas = $("#offCanvasRight");
   var eraseAll = $("#eraseAll");
+  var brique = $(".brick");
+  var bricksize = parseInt($(document).width()/100);
+  var bricksizepx = bricksize+"px";
+  var smartphone;
 
-  //elem.css('height', "100vmax");
-  //elem.css('width', "100vmax");
+  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    console.log("smartphone");
+    smartphone = 1;
+  } else {
+    smartphone = 0;
+  }
+
+
+  // $(window).resize(function() {
+  //   bricksize = parseInt($(window).width()/100);
+  //   location.reload();
+  // });
+
+  elem.css('background-size', bricksizepx + " " + bricksizepx);
+
 
   /* ------------ Gestion du tactile ------------ */
 
-  if (screen.width > 640 && screen.height > 480) {
+  if (smartphone == 0) {
     btn_dezoom.style.visibility = "hidden";
     btn_dezoom.style.display = "none";
   }
@@ -42,7 +62,7 @@ $(window).load(function (){
   hammertime.on('tap pan pinch panend pinchend', function(ev) {
 
     // la 2ème condition empèche le dessin continu sur le drawspace
-    if (ev.type == "tap" && scale == 1 && screen.width < 500) {
+    if (ev.type == "tap" && scale == 1 && smartphone == 1) {
 
       scale = 2;
       last_scale = 2;
@@ -122,7 +142,7 @@ $(window).load(function (){
       scale = 1;
       last_scale = 1;
     }
-} 
+  } 
 
  $(function() {      
       $("body").swipe( {
@@ -185,10 +205,12 @@ hammerIt(elem[0]);
   var authData;
 
 
+    
+
   // Ici commence le code du "backend"
   var legobase = new Webcom(webcom_url);
-
   var domain="brick";
+
   if (m=window.location.href.match(/#(.*)$/)) {
     if (m && m[1].match(/^[A-Za-z0-9_\-]+$/)) {
       domain=m[1];
@@ -202,7 +224,6 @@ hammerIt(elem[0]);
 
   // Méthode appelée pour créer/modifier/supprimer une brique à la position x,y
   function updatePos(x, y) {
-
     /*
     if ($("body").scale != 1) {
       console.log('ok');
@@ -240,7 +261,7 @@ hammerIt(elem[0]);
   // Callback sur l'ajout d'une nouvelle brick
   legobase.child(domain).on('child_added', function(snapshot) {
     var brick=snapshot.val();
-    var brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (30*brick.y)+"px").css('left', (30*brick.x)+"px");
+    var brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksizepx + " " + bricksizepx);
 
     if (brick.uid) {
       brick_div.addClass(brick.uid.replace(":", "_"));
@@ -273,8 +294,8 @@ hammerIt(elem[0]);
   // Ici se termine le code du "backend".
 
   /* gère la surbrillance d'une couleur active */
-  $(".colors .brick").click(function(e) {
-    $(".colors .brick").removeClass("active");
+  $(".colors .brickMenu").click(function(e) {
+    $(".colors .brickMenu").removeClass("active");
     $(this).addClass("active");
     color=$(this).attr('class').replace(/\s*(brick|active)\s*/g, '');
   });
@@ -310,7 +331,6 @@ hammerIt(elem[0]);
     }
   }
 
-  if (! /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 
     $(".drawspace").on('mousedown', function(e){
   	  e.preventDefault();
@@ -327,8 +347,8 @@ hammerIt(elem[0]);
         e.preventDefault();
 
         if (options_div.length==0) {
-          x=parseInt(e.pageX / 30);
-          y=parseInt(e.pageY / 30);
+          x=parseInt(e.pageX / bricksize);
+          y=parseInt(e.pageY / bricksize);
           var new_move=x+"-"+y;
           if (new_move!=last_move) {
             updatePos(x,y);
@@ -349,18 +369,34 @@ hammerIt(elem[0]);
       };
       $(document).on(handlers);
     });
-  }
 
   /* Gère le click simple (ajout/suppression de briques) sur le drawspace  */
   $(".drawspace").bind("click", function(e){
 	  var target = $( e.target );
     var x,y;
-      x=parseInt(e.pageX / 30);
-      y=parseInt(e.pageY / 30);
+      x=parseInt(e.pageX / bricksize);
+      y=parseInt(e.pageY / bricksize);
       if (screen.width < 500) {
         x = x/2;
         y = y/2;  
       } 
       updatePos(x,y);
   });
+
+  var leftPos;
+  $("#buttonToggle").click(function() {
+    
+    if (!offCanvas.hasClass("is-open")) {
+      leftPos = $('body').scrollLeft();
+      $("body").animate({scrollLeft: leftPos + 300}, 800);
+    } else {
+      $("body").animate({scrollLeft: leftPos - 200}, 800);
+    }
+    
+  
+  })
+
+
 });
+
+
