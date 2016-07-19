@@ -9,7 +9,7 @@ $(window).load(function (){
 
   $(document).foundation();
 
-  var elem = $(".drawspace");
+  var drawspace = $("#drawspace");
   var btn_dezoom = document.getElementById('btn_dezoom');
   var offCanvas = $("#offCanvasRight");
   var eraseAll = $("#eraseAll");
@@ -23,15 +23,15 @@ $(window).load(function (){
     smartphone = 1;
   } else {
     smartphone = 0;
+    $('body').css('position', 'absolute');
   }
-
 
   // $(window).resize(function() {
   //   bricksize = parseInt($(window).width()/100);
   //   location.reload();
   // });
 
-  elem.css('background-size', bricksizepx + " " + bricksizepx);
+  drawspace.css('background-size', bricksizepx + " " + bricksizepx);
 
 
   /* ------------ Gestion du tactile ------------ */
@@ -41,19 +41,19 @@ $(window).load(function (){
     btn_dezoom.style.display = "none";
   }
 
-  function hammerIt(elm) {
-    hammertime = new Hammer(elm, {});
+  function hammerIt(drawspace) {
+    hammertime = new Hammer(drawspace, {});
 
     var posX = 0,
-      posY = 0,
-      scale = 1,
-      last_scale = 1,
-      last_posX = 0,
-      last_posY = 0,
-      max_pos_x = 0,
-      max_pos_y = 0,
-      transform = "",
-      el = elm;
+        posY = 0,
+        scale = 1,
+        last_scale = 1,
+        last_posX = 0,
+        last_posY = 0,
+        max_pos_x = 0,
+        max_pos_y = 0,
+        transform = "",
+        el = drawspace;
 
     var pageX, pageY;
     var position;
@@ -61,16 +61,21 @@ $(window).load(function (){
 
   hammertime.on('tap pan pinch panend pinchend', function(ev) {
 
+
     // la 2ème condition empèche le dessin continu sur le drawspace
     if (ev.type == "tap" && scale == 1 && smartphone == 1) {
-
       scale = 2;
       last_scale = 2;
       posX = ev.center.x * scale;
       posY = ev.center.y * scale;
 
+      console.log("posX = " + posX + " - posY = " + posY);
+      console.log("pageX = " + ev.pageX + " - pageY = " + ev.pageY);
+
       max_pos_x = Math.ceil((scale - 1) * el.clientWidth / 2);
       max_pos_y = Math.ceil((scale - 1) * el.clientHeight / 2);
+
+      console.log("max_posX = " + max_pos_x + " - max_pos_y = " + max_pos_y);
 
       if (posX < max_pos_x*2 && posY > max_pos_y*2) {
           posX = max_pos_x;
@@ -90,10 +95,17 @@ $(window).load(function (){
       }
       last_posX = posX;
       last_posY = posY;
-    } 
+    } else if (ev.type == "tap" && scale > 1 && smartphone == 1){ 
+        console.log("innerWidth = " + window.innerWidth + " - innerHeight = " + window.innerHeight);
+        //console.log("pageX = " + ev.pageX + " - pageY = " + ev.pageY);
+        //console.log("scrollTop = " + el.scrollTop() + " - scrollLeft = " + el.scrollLeft);
+  
+    }  
+
 
     //pan    
-    if (ev.type == "pan" && scale == 2) {
+    if (ev.type == "pan") {
+
         posX = last_posX + ev.deltaX;
         posY = last_posY + ev.deltaY;
         max_pos_x = Math.ceil((scale - 1) * el.clientWidth / 2);
@@ -194,7 +206,7 @@ $(window).load(function (){
   });
   
 // appel de la fonction permettant de gérer les évennements tactiles
-hammerIt(elem[0]);
+hammerIt(drawspace[0]);
 
   var webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__;
   var bricks={};
@@ -269,7 +281,7 @@ hammerIt(elem[0]);
     
     bricks[brick.x+"-"+brick.y]=brick_div;
     
-    $(".drawspace").append(brick_div);
+    $("#drawspace").append(brick_div);
 	  $("#bricks_count").html(Object.keys(bricks).length);
   }); 
 
@@ -332,7 +344,7 @@ hammerIt(elem[0]);
   }
 
 
-    $(".drawspace").on('mousedown', function(e){
+    drawspace.on('mousedown', function(e){
   	  e.preventDefault();
       var target = $( e.target );
       var options_div=target.closest(".options");
@@ -350,7 +362,7 @@ hammerIt(elem[0]);
             y=parseInt(e.pageY / bricksize);
             var new_move=x+"-"+y;
             // Disable brick overflow outside drawspace
-            if (new_move!=last_move && e.pageX < elem.width() && e.pageY < elem.height()) {
+            if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < drawspace.height()) {
               updatePos(x,y);
             }
             last_move=new_move;
@@ -372,27 +384,34 @@ hammerIt(elem[0]);
     });
 
   /* Gère le click simple (ajout/suppression de briques) sur le drawspace  */
-  $(".drawspace").bind("click", function(e){
+  $("#drawspace").bind("click", function(e){
+    console.log("offsetTop = " + drawspace.offset().top + " - offsetLeft = " + drawspace.offset().left);
+    console.log("Pagex = " + e.pageX + " - Pagey = "+ e.pageY);
 	  var target = $( e.target );
     var x,y;
-      x=parseInt(e.pageX / bricksize);
-      y=parseInt(e.pageY / bricksize);
-      if (screen.width < 500) {
-        x = x/2;
-        y = y/2;  
-      } 
+      // le 2 fait référence au zoom
+      if (smartphone == 1) {
+        x=parseInt(((e.pageX - drawspace.offset().left) / bricksize)/2);
+        y=parseInt(((e.pageY - drawspace.offset().top) / bricksize)/2);
+        console.log("x = " + x + " - y = "+ y);
+      } else {
+        x=parseInt(e.pageX / bricksize);
+        y=parseInt(e.pageY / bricksize);
+      }
       updatePos(x,y);
   });
 
   var leftPos;
   $("#buttonToggle").click(function() {
-    if (!offCanvas.hasClass("is-open")) {
-      leftPos = $('body').scrollLeft();
-      $("body").animate({scrollLeft: leftPos + 300}, 800);
-    } else {
-      $("body").animate({scrollLeft: leftPos - 300}, 800);
+     if (smartphone == 0) {
+      if (!offCanvas.hasClass("is-open")) {
+        leftPos = $('body').scrollLeft();
+        $("body").animate({scrollLeft: leftPos + 300}, 800);
+      } else {
+        $("body").animate({scrollLeft: leftPos - 300}, 800);
+      }
     }
-  })
+  });
 });
 
 

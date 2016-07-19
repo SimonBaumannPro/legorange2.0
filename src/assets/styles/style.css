@@ -1,6 +1,5 @@
 
 body {
-    position: absolute;
     zoom:1;
 }
 
@@ -12,7 +11,7 @@ body {
     position : fixed;
 }
 
-.drawspace {
+#drawspace {
     width:2048px;
     height:1180px;
     padding: 0;
