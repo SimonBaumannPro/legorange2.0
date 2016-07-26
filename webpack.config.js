@@ -8,13 +8,11 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const config = {
 	entry: {
 		vendor: [
-				 'react-dom',
+				 'imports?exports=>false&module=>false!jquery',
 				 'font-awesome',
 				 'touchswipe',
-				 'foundationjs',
 				 'hammer',
-				 'imports?exports=>false&module=>false!react',
-				 'imports?exports=>false&module=>false!jquery',
+				 'foundation',
 				 'imports?exports=>false&module=>false!webcom',	 
 		],
 		script: './src/script.js'
@@ -27,20 +25,17 @@ const config = {
 	resolve: {
     	root: __dirname,
         alias: {
-        	'webcom': 'webcom/webcom.js',
-        	react: 'react/dist/react.min.js',
         	jquery: 'jquery/dist/jquery.min.js',
+        	'webcom': 'webcom/webcom.js',
         	'hammer' : 'hammerjs/hammer.min.js',
-			'react-dom': 'react-dom/dist/react-dom.min.js',
 			'font-awesome': 'font-awesome/css/font-awesome.min.css',
-			'foundationjs' : 'foundation-sites/dist/foundation.min.js',
+			'foundation' : 'foundation-sites/dist/foundation.min.js',
 			'touchswipe' : 'jquery-touchswipe/jquery.touchSwipe.min.js'
         },
         extensions: ["", ".webpack.js", ".web.js", ".js", ".css", ".min.css", ".scss"]
     },
 	module: {
 		loaders: [
-			{ test: /\.js/, loaders: ['babel'], exclude: /node_modules/ },
 			{ test: /\.png$/, loader: 'url-loader?mimetype=image/png'},
 			{
         		test: /\.scss$/,
@@ -52,7 +47,6 @@ const config = {
 			}	
 		],
 		noParse: [	
-			/react(:?\.min)?\.js$/,
 			/jquery\.min\.js$/,
 			/webcom\.js$/
 		]

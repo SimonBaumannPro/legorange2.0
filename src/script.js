@@ -3,13 +3,15 @@ require('./assets/styles/style.css');
 
 
 
-$(window).load(function (){
+$(window).on("load", function (){
 
+ $(document).foundation();
 
+  // $(function() {
+  //   
+  // });
 
-  $(document).foundation();
-
-  var elem = $(".drawspace");
+  var drawspace = $(".drawspace");
   var btn_dezoom = document.getElementById('btn_dezoom');
   var offCanvas = $("#offCanvasRight");
   var eraseAll = $("#eraseAll");
@@ -23,6 +25,7 @@ $(window).load(function (){
     smartphone = 1;
   } else {
     smartphone = 0;
+    $('.body').css('position', 'absolute');
   }
 
 
@@ -31,7 +34,7 @@ $(window).load(function (){
   //   location.reload();
   // });
 
-  elem.css('background-size', bricksizepx + " " + bricksizepx);
+  drawspace.css('background-size', bricksizepx + " " + bricksizepx);
 
 
   /* ------------ Gestion du tactile ------------ */
@@ -41,8 +44,8 @@ $(window).load(function (){
     btn_dezoom.style.display = "none";
   }
 
-  function hammerIt(elm) {
-    hammertime = new Hammer(elm, {});
+  function hammerIt(drawspace) {
+    hammertime = new Hammer(drawspace, {});
 
     var posX = 0,
       posY = 0,
@@ -53,7 +56,7 @@ $(window).load(function (){
       max_pos_x = 0,
       max_pos_y = 0,
       transform = "",
-      el = elm;
+      el = drawspace;
 
     var pageX, pageY;
     var position;
@@ -194,7 +197,7 @@ $(window).load(function (){
   });
   
 // appel de la fonction permettant de gérer les évennements tactiles
-hammerIt(elem[0]);
+hammerIt(drawspace[0]);
 
   var webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__;
   var bricks={};
@@ -350,7 +353,7 @@ hammerIt(elem[0]);
             y=parseInt(e.pageY / bricksize);
             var new_move=x+"-"+y;
             // Disable brick overflow outside drawspace
-            if (new_move!=last_move && e.pageX < elem.width() && e.pageY < elem.height()) {
+            if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < drawspace.height()) {
               updatePos(x,y);
             }
             last_move=new_move;
@@ -375,18 +378,19 @@ hammerIt(elem[0]);
   $(".drawspace").bind("click", function(e){
 	  var target = $( e.target );
     var x,y;
+    if (smartphone == 1) {
+      x=parseInt(((e.pageX - drawspace.offset().left) / bricksize)/2);
+      y=parseInt(((e.pageY - drawspace.offset().top) / bricksize)/2);
+    } else {
       x=parseInt(e.pageX / bricksize);
       y=parseInt(e.pageY / bricksize);
-      if (screen.width < 500) {
-        x = x/2;
-        y = y/2;  
-      } 
-      updatePos(x,y);
+    }
+    updatePos(x,y);
   });
 
   var leftPos;
   $("#buttonToggle").click(function() {
-    if (!offCanvas.hasClass("is-open")) {
+    if (!offCanvas.hasClass("is-open") && smartphone == 0) {
       leftPos = $('body').scrollLeft();
       $("body").animate({scrollLeft: leftPos + 300}, 800);
     } else {
