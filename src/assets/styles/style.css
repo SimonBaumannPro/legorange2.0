@@ -1,6 +1,8 @@
 
 body {
     zoom:1;
+    /*width:100vw;
+    height:100vh;*/
 }
 
 .fixed {
@@ -13,7 +15,7 @@ body {
 
 .drawspace {
     width:2048px;
-    height:1180px;
+    height:1280px;
     padding: 0;
     margin-top: 0px;
     margin-bottom: 0px;
@@ -24,6 +26,7 @@ body {
     background: url(../images/lego_orange_tile.png) repeat;
     background-size: 100px 100px;
     z-index: -1;
+    transform-origin: 0 0 0;
 }
 
 .brick {

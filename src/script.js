@@ -5,6 +5,9 @@ require('./assets/styles/style.css');
 
 $(window).on("load", function (){
 
+console.log('cliX = ' + (".drawspace").clientWidth + ' - cliY = ' + $('.drawspace').clientHeight);
+console.log('ViewX = ' + window.innerWidth);
+
  $(document).foundation();
 
   // $(function() {
@@ -16,16 +19,19 @@ $(window).on("load", function (){
   var offCanvas = $("#offCanvasRight");
   var eraseAll = $("#eraseAll");
   var brique = $(".brick");
-  var bricksize = parseInt($(document).width()/100);
+  var bricksize = 16;//parseInt($(document).width()/100);
   var bricksizepx = bricksize+"px";
   var smartphone;
+  var scale = 1;
 
   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
     console.log("smartphone");
+    //$('body').css('position', 'absolute');
     smartphone = 1;
   } else {
     smartphone = 0;
-    $('.body').css('position', 'absolute');
+    console.log('smartphone = 0');
+    $('body').css('position', 'absolute');
   }
 
 
@@ -49,12 +55,12 @@ $(window).on("load", function (){
 
     var posX = 0,
       posY = 0,
-      scale = 1,
       last_scale = 1,
       last_posX = 0,
       last_posY = 0,
       max_pos_x = 0,
       max_pos_y = 0,
+      min_pos = 0,
       transform = "",
       el = drawspace;
 
@@ -66,41 +72,64 @@ $(window).on("load", function (){
 
     // la 2ème condition empèche le dessin continu sur le drawspace
     if (ev.type == "tap" && scale == 1 && smartphone == 1) {
-
+      
+      last_scale = scale;
       scale = 2;
-      last_scale = 2;
-      posX = ev.center.x * scale;
-      posY = ev.center.y * scale;
 
-      max_pos_x = Math.ceil((scale - 1) * el.clientWidth / 2);
-      max_pos_y = Math.ceil((scale - 1) * el.clientHeight / 2);
+      var offX = $('.drawspace').offset().left*scale ;
+      var offY = $('.drawspace').offset().top*scale ;
 
-      if (posX < max_pos_x*2 && posY > max_pos_y*2) {
-          posX = max_pos_x;
-          posY = -max_pos_y;
-      } else
-      if (posX < max_pos_x*2 && posY < max_pos_y*2) {
-          posX = max_pos_x;
-          posY = max_pos_y;
-      } else
-      if (posX > max_pos_x*2 && posY < max_pos_y*2) {
-          posX = -max_pos_x;
-          posY = +max_pos_y;
-      } else
-      if (posX > max_pos_x*2 && posY > max_pos_y*2) {
-          posX = -max_pos_x;
-          posY = -max_pos_y;
-      }
-      last_posX = posX;
-      last_posY = posY;
+      var iniMouseX = ev.center.x - offX;     // mouse position at zoom scale 1
+      var iniMouseY = ev.center.y - offY;
+
+
+      var newMouseX = iniMouseX * scale;      // mouse position at new scale
+      var newMouseY = iniMouseY * scale;
+
+      console.log("ev.centerx = " + ev.center.x + " - ev.centery = " + ev.center.y);
+      console.log("iniMouseX = "+ iniMouseX + " - iniMouseY = " + iniMouseY);
+      console.log("offX = " + offX + " - offY = " + offY);
+      console.log("newMouseX = "+ newMouseX + " - newMouseY = " + newMouseY);
+
+      
+      posX = (iniMouseX - newMouseX) ;
+      posY = (iniMouseY - newMouseY) ;
+
+      console.log("posX = " + posX + " - posY = " + posY);
+
+      max_pos_x =  el.clientWidth - window.innerWidth;
+      max_pos_y =  el.clientHeight - window.innerHeight;
+
+      // if (posX < max_pos_x*2 && posY > max_pos_y*2) {
+      //     posX = max_pos_x;
+      //     posY = -max_pos_y;
+      // } else
+      // if (posX < max_pos_x*2 && posY < max_pos_y*2) {
+      //     posX = max_pos_x;
+      //     posY = max_pos_y;
+      // } else
+      // if (posX > max_pos_x*2 && posY < max_pos_y*2) {
+      //     posX = -max_pos_x;
+      //     posY = +max_pos_y;
+      // } else
+      // if (posX > max_pos_x*2 && posY > max_pos_y*2) {
+      //     posX = -max_pos_x;
+      //     posY = -max_pos_y;
+      // }
+      // last_posX = posX;
+      // last_posY = posY;
     } 
 
     //pan    
-    if (ev.type == "pan" && scale == 2) {
+    if (ev.type == "pan" && scale == 2 && smartphone == 1) {
+      console.log('offsetRight = ' + $('.drawspace').offset().left);
+      console.log('pX = ' + posX + ' - pY = ' + posY);
+      
         posX = last_posX + ev.deltaX;
         posY = last_posY + ev.deltaY;
-        max_pos_x = Math.ceil((scale - 1) * el.clientWidth / 2);
-        max_pos_y = Math.ceil((scale - 1) * el.clientHeight / 2);
+        max_pos_x =  el.clientWidth - window.innerWidth;
+        max_pos_y =  el.clientHeight - window.innerHeight;
+
         if (posX > max_pos_x) {
             posX = max_pos_x;
         }
@@ -115,16 +144,41 @@ $(window).on("load", function (){
         }
     }
 
+    if (ev.type == "pan" && scale == 1 && smartphone == 1) {
+      console.log('offX = ' +  $('.drawspace').offset().left);
+      console.log('cliW = ' + el.clientWidth + ' - cliH = '+ el.clientHeight);
+      console.log('pX = ' + posX + ' - pY = ' + posY);
+      
+        posX = last_posX + ev.deltaX;
+        posY = last_posY + ev.deltaY;
+        max_pos_x =  el.clientWidth - window.innerWidth;
+        max_pos_y =  el.clientHeight - window.innerHeight;
+
+        if (posX > 0) {
+            posX = min_pos;
+        }
+        if (posX < -max_pos_x) {
+            posX = -max_pos_x;
+        }
+        if (posY > 0) {
+            posY = min_pos;
+        }
+        if (posY < -max_pos_y) {
+            posY = -max_pos_y;
+        }
+    }
+
+
     //panend
     if (ev.type == "panend"){
         last_posX = posX < max_pos_x ? posX : max_pos_x;
         last_posY = posY < max_pos_y ? posY : max_pos_y;
     }
 
-    if (scale == 2) {
+    if (scale) {
         transform =
           "translate3d(" + posX + "px," + posY + "px, 0) " +
-          "scale3d(" + scale + ", " + scale + ", 1)";
+          "scale(" + scale + ")";
     }
 
     if (transform) {
@@ -353,11 +407,11 @@ hammerIt(drawspace[0]);
             y=parseInt(e.pageY / bricksize);
             var new_move=x+"-"+y;
             // Disable brick overflow outside drawspace
-            if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < drawspace.height()) {
+            if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < drawspace.height() && e.pageX > 0 && e.pageY > 0) {
               updatePos(x,y);
             }
             last_move=new_move;
-          } else {
+          } else { // unused
             alert('lala');
              options_div.css({
               left : ( initialized.x + e.pageX - $(document).scrollLeft() ) + 'px',
@@ -376,27 +430,41 @@ hammerIt(drawspace[0]);
 
   /* Gère le click simple (ajout/suppression de briques) sur le drawspace  */
   $(".drawspace").bind("click", function(e){
-	  var target = $( e.target );
+	  var target = $(e.target );
     var x,y;
-    if (smartphone == 1) {
+    if (smartphone == 1 ) {
       x=parseInt(((e.pageX - drawspace.offset().left) / bricksize)/2);
       y=parseInt(((e.pageY - drawspace.offset().top) / bricksize)/2);
     } else {
       x=parseInt(e.pageX / bricksize);
       y=parseInt(e.pageY / bricksize);
     }
-    updatePos(x,y);
+    if (scale == 1) {
+      updatePos(x,y);
+    }
   });
 
-  var leftPos;
+  // Remise en place de la scrollbar à sa position iniliale après avoir déclanché l'Off Canvas.
+  var leftPos,
+      topPos,
+      offsetTop,
+      offsetLeft;
   $("#buttonToggle").click(function() {
+     offsetTop = drawspace.offset().top;
+     offsetLeft = drawspace.offset().left;
     if (!offCanvas.hasClass("is-open") && smartphone == 0) {
       leftPos = $('body').scrollLeft();
+      topPos = $('body').scrollTop();
       $("body").animate({scrollLeft: leftPos + 300}, 800);
     } else {
-      $("body").animate({scrollLeft: leftPos - 300}, 800);
+      $("body").animate({scrollLeft: leftPos - offsetLeft}, 800);
+      $("body").animate({scrollTop: topPos - offsetTop}, 1);
     }
-  })
+  });
+  // Evenement déclanché lors de la fermeture de l'offCanvas
+  $(document).on('closed.zf.offcanvas', function() {
+    $("body").animate({scrollLeft: leftPos - offsetLeft}, 800);
+    $("body").animate({scrollTop: topPos - offsetTop}, 1);
+  });
+
 });
-
-
