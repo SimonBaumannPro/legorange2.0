@@ -1,18 +1,9 @@
 require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
 
-
-
 $(window).on("load", function (){
 
-console.log('cliX = ' + (".drawspace").clientWidth + ' - cliY = ' + $('.drawspace').clientHeight);
-console.log('ViewX = ' + window.innerWidth);
-
- $(document).foundation();
-
-  // $(function() {
-  //   
-  // });
+  $(document).foundation();
 
   var drawspace = $(".drawspace");
   var btn_dezoom = document.getElementById('btn_dezoom');
@@ -21,237 +12,215 @@ console.log('ViewX = ' + window.innerWidth);
   var brique = $(".brick");
   var bricksize = 16;//parseInt($(document).width()/100);
   var bricksizepx = bricksize+"px";
-  var smartphone;
+  var smartphone = 1;  // initialisation en mode smartphone
   var scale = 1;
+  var zoomed = 0;
+  var pX = 0;
+  var pY = 0;
 
-  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-    console.log("smartphone");
-    //$('body').css('position', 'absolute');
-    smartphone = 1;
-  } else {
+  // test si mobile device ou non
+  if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
     smartphone = 0;
     console.log('smartphone = 0');
     $('body').css('position', 'absolute');
-  }
+  }  
 
+  // Initialisation de la taille des briques du drawspace
+  drawspace.css('background-size', bricksizepx + " " + bricksizepx);
 
   // $(window).resize(function() {
   //   bricksize = parseInt($(window).width()/100);
   //   location.reload();
   // });
 
-  drawspace.css('background-size', bricksizepx + " " + bricksizepx);
-
-
   /* ------------ Gestion du tactile ------------ */
 
-  if (smartphone == 0) {
+  if (smartphone == 0 || (smartphone == 1 && scale == 1)) {
     btn_dezoom.style.visibility = "hidden";
     btn_dezoom.style.display = "none";
   }
 
-  function hammerIt(drawspace) {
-    hammertime = new Hammer(drawspace, {});
+  function hammerIt(pDrawspace) {
+
+    hammertime = new Hammer(pDrawspace, {});
 
     var posX = 0,
-      posY = 0,
-      last_scale = 1,
-      last_posX = 0,
-      last_posY = 0,
-      max_pos_x = 0,
-      max_pos_y = 0,
-      min_pos = 0,
-      transform = "",
-      el = drawspace;
+        posY = 0,
+        last_posX = 0,
+        last_posY = 0,
+        max_pos_x = 0,
+        max_pos_y = 0,
+        min_pos = 0,
+        transform = "",
+        ds = pDrawspace;
 
-    var pageX, pageY;
-    var position;
-    
+    hammertime.on('tap pan pinch panend pinchend', function(ev) {
 
-  hammertime.on('tap pan pinch panend pinchend', function(ev) {
+      // Tap to zoom
+      if (ev.type == "tap" && scale == 1 && smartphone == 1) {
+        
+        btn_dezoom.style.visibility = "visible";
+        btn_dezoom.style.display = "inline";
 
-    // la 2ème condition empèche le dessin continu sur le drawspace
-    if (ev.type == "tap" && scale == 1 && smartphone == 1) {
-      
-      last_scale = scale;
-      scale = 2;
+        last_scale = 1;
+        scale = 2;
 
-      var offX = $('.drawspace').offset().left*scale ;
-      var offY = $('.drawspace').offset().top*scale ;
+        var offX = drawspace.offset().left*scale ;
+        var offY = drawspace.offset().top*scale ;
 
-      var iniMouseX = ev.center.x - offX;     // mouse position at zoom scale 1
-      var iniMouseY = ev.center.y - offY;
+        var iniMouseX = ev.center.x - offX;     // mouse position at zoom scale 1
+        var iniMouseY = ev.center.y - offY;
 
+        var newMouseX = iniMouseX * scale;      // mouse position at new scale
+        var newMouseY = iniMouseY * scale;
+        
+        posX = (iniMouseX - newMouseX) ;
+        posY = (iniMouseY - newMouseY) ;
 
-      var newMouseX = iniMouseX * scale;      // mouse position at new scale
-      var newMouseY = iniMouseY * scale;
+        last_posX = posX;
+        last_posY = posY;
 
-      console.log("ev.centerx = " + ev.center.x + " - ev.centery = " + ev.center.y);
-      console.log("iniMouseX = "+ iniMouseX + " - iniMouseY = " + iniMouseY);
-      console.log("offX = " + offX + " - offY = " + offY);
-      console.log("newMouseX = "+ newMouseX + " - newMouseY = " + newMouseY);
+        pX = posX;
+        pY = posY;
 
-      
-      posX = (iniMouseX - newMouseX) ;
-      posY = (iniMouseY - newMouseY) ;
+        max_pos_x =  ds.clientWidth - window.innerWidth;
+        max_pos_y =  ds.clientHeight - window.innerHeight;
+      } 
 
-      console.log("posX = " + posX + " - posY = " + posY);
+      if (ev.type == "tap" && scale == 2 && smartphone == 1) {
+        var x,y;
+        x=parseInt(((ev.center.x - drawspace.offset().left) / bricksize)/2);
+        y=parseInt(((ev.center.y- drawspace.offset().top) / bricksize)/2);
+        updatePos(x,y);
 
-      max_pos_x =  el.clientWidth - window.innerWidth;
-      max_pos_y =  el.clientHeight - window.innerHeight;
+      }
 
-      // if (posX < max_pos_x*2 && posY > max_pos_y*2) {
-      //     posX = max_pos_x;
-      //     posY = -max_pos_y;
-      // } else
-      // if (posX < max_pos_x*2 && posY < max_pos_y*2) {
-      //     posX = max_pos_x;
-      //     posY = max_pos_y;
-      // } else
-      // if (posX > max_pos_x*2 && posY < max_pos_y*2) {
-      //     posX = -max_pos_x;
-      //     posY = +max_pos_y;
-      // } else
-      // if (posX > max_pos_x*2 && posY > max_pos_y*2) {
-      //     posX = -max_pos_x;
-      //     posY = -max_pos_y;
-      // }
-      // last_posX = posX;
-      // last_posY = posY;
-    } 
-
-    //pan    
-    if (ev.type == "pan" && scale == 2 && smartphone == 1) {
-      console.log('offsetRight = ' + $('.drawspace').offset().left);
-      console.log('pX = ' + posX + ' - pY = ' + posY);
-      
+      // Pan in draw mode 
+      if (ev.type == "pan" && scale == 2 && smartphone == 1) {
+        
         posX = last_posX + ev.deltaX;
         posY = last_posY + ev.deltaY;
-        max_pos_x =  el.clientWidth - window.innerWidth;
-        max_pos_y =  el.clientHeight - window.innerHeight;
 
-        if (posX > max_pos_x) {
-            posX = max_pos_x;
-        }
-        if (posX < -max_pos_x) {
-            posX = -max_pos_x;
-        }
-        if (posY > max_pos_y) {
-            posY = max_pos_y;
-        }
-        if (posY < -max_pos_y) {
-            posY = -max_pos_y;
-        }
-    }
-
-    if (ev.type == "pan" && scale == 1 && smartphone == 1) {
-      console.log('offX = ' +  $('.drawspace').offset().left);
-      console.log('cliW = ' + el.clientWidth + ' - cliH = '+ el.clientHeight);
-      console.log('pX = ' + posX + ' - pY = ' + posY);
-      
-        posX = last_posX + ev.deltaX;
-        posY = last_posY + ev.deltaY;
-        max_pos_x =  el.clientWidth - window.innerWidth;
-        max_pos_y =  el.clientHeight - window.innerHeight;
+        max_pos_x =  ds.clientWidth*2 - window.innerWidth;
+        max_pos_y =  ds.clientHeight*2 - window.innerHeight;
 
         if (posX > 0) {
-            posX = min_pos;
+          posX = min_pos;
         }
         if (posX < -max_pos_x) {
-            posX = -max_pos_x;
+          posX = -max_pos_x;
         }
         if (posY > 0) {
-            posY = min_pos;
+          posY = min_pos;
         }
         if (posY < -max_pos_y) {
-            posY = -max_pos_y;
+          posY = -max_pos_y;
         }
-    }
 
+        pX = posX;
+        pY = posY;
+      }
 
-    //panend
-    if (ev.type == "panend"){
+      // Pan in navigation mode
+      if (ev.type == "pan" && scale == 1 && smartphone == 1) {
+        
+        posX = last_posX + ev.deltaX;
+        posY = last_posY + ev.deltaY;
+        max_pos_x =  ds.clientWidth - window.innerWidth;
+        max_pos_y =  ds.clientHeight - window.innerHeight;
+
+        if (posX > 0) {
+          posX = min_pos;
+        }
+        if (posX < -max_pos_x) {
+          posX = -max_pos_x;
+        }
+        if (posY > 0) {
+          posY = min_pos;
+        }
+        if (posY < -max_pos_y) {
+          posY = -max_pos_y;
+        }
+      }
+
+      // Panend
+      if (ev.type == "panend"){
         last_posX = posX < max_pos_x ? posX : max_pos_x;
         last_posY = posY < max_pos_y ? posY : max_pos_y;
-    }
+      }
 
-    if (scale) {
+      if (scale) {
         transform =
-          "translate3d(" + posX + "px," + posY + "px, 0) " +
+          "translate(" + posX + "px," + posY + "px) " +
           "scale(" + scale + ")";
-    }
+      }
 
-    if (transform) {
-        el.style.webkitTransform = transform;
-    }
-  });
+      if (transform) {
+        ds.style.transform = transform;
+        //$('.drawspace').css("-webkit-backface-visibility", "hidden");
+      }
+    });
 
-  document.getElementById("btn_dezoom").onclick = function() {
-        try {
-          if (window.getComputedStyle(el, null).getPropertyValue('-webkit-transform').toString() != "matrix(1, 0, 0, 1, 0, 0)") {
-               transform =
-              "translate3d(0, 0, 0) " +
-               "scale3d(1, 1, 1) ";
-          }
-        } catch (err) {}
-      el.style.webkitTransform = transform;
+    btn_dezoom.onclick = function() {
+      try {
+        if (window.getComputedStyle(ds, null).getPropertyValue('-webkit-transform').toString() != "matrix(1, 0, 0, 1, 0, 0)") {
+          transform =
+            "translate3d("+0+","+0+", 0) " +
+            "scale3d(1, 1, 1) ";
+        }
+      } catch (err) {}
+      
+      ds.style.webkitTransform = transform;
       transform = "";
       scale = 1;
-      last_scale = 1;
+      last_scale = 2;
+
+      btn_dezoom.style.visibility = "hidden";
+      btn_dezoom.style.display = "none";
+
+      zoomed = 0;
     }
   } 
 
- $(function() {      
-      $("body").swipe( {
-        swipeStatus:function(event, phase, direction, distance , duration , fingerCount) {
-           if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
-             //The handlers below fire after the status, 
-             // so we can change the text here, and it will be replaced if the handlers below fire
-             $(this).find('#swipe_text').text("No swipe was made");
-           }
-        },
-        pinchStatus:function(event, phase, direction, distance , duration , fingerCount, pinchZoom) {
-          if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
-             //The handlers below fire after the status, 
-             // so we can change the text here, and it will be replaced if the handlers below fire
-             $(this).find('#pinch_text').text("No pinch was made");
-           }
-        },
-        swipeLeft:function(event, direction, distance, duration, fingerCount) {
-          if (fingerCount == 1 && duration < 200) {
-            offCanvas.foundation("open", offCanvas);
-          }        
-        },
-        swipeRight:function(event, direction, distance, duration, fingerCount) {
-          if (fingerCount == 1) {
-            offCanvas.foundation('close');
-          }
-        },
-        pinchIn:function(event, direction, distance, duration, fingerCount, pinchZoom) {
-          //alert("You pinched " +direction + " by " + distance +"px, zoom scale is "+pinchZoom); 
-        },
-        pinchOut:function(event, direction, distance, duration, fingerCount, pinchZoom) {
-          //alert("You pinched " +direction + " by " + distance +"px, zoom scale is "+pinchZoom);
-        },
-        fingers:$.fn.swipe.fingers.ALL  
-      });
+  $(function() {      
+    $("body").swipe( {
+      swipeStatus:function(event, phase, direction, distance , duration , fingerCount) {
+        if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
+          //The handlers below fire after the status, 
+          // so we can change the text here, and it will be replaced if the handlers below fire
+          $(this).find('#swipe_text').text("No swipe was made");
+         }
+      },
+      swipeLeft:function(event, direction, distance, duration, fingerCount) {
+        if (fingerCount == 1 && duration < 200) {
+          offCanvas.foundation("open", offCanvas);
+        }        
+      },
+      swipeRight:function(event, direction, distance, duration, fingerCount) {
+        if (fingerCount == 1) {
+          offCanvas.foundation('close');
+        }
+      },
+      fingers:$.fn.swipe.fingers.ALL  
+    });
   });
 
-
-  /* Disable Ctrl+mouseWheel Zoom on cross-browser */
+  /* Disable Key-Push to zoom on browsers */
   $(document).keydown(function(event) {
-      if (event.ctrlKey==true && (event.which == '61' || event.which == '107' || event.which == '173' || event.which == '109'  || event.which == '187'  || event.which == '189'  ) ) {
-                event.preventDefault();
-      }
+    if (event.ctrlKey==true && (event.which == '61' || event.which == '107' || event.which == '173' || event.which == '109'  || event.which == '187'  || event.which == '189'  ) ) {
+      event.preventDefault();
+    }
   });
+
+  /* Disable Ctrl+mouseWheel zoom on cross-browser */
   $(window).bind('mousewheel DOMMouseScroll', function (event) {
-      if (event.ctrlKey == true) {
-          event.preventDefault();
-      }
+    if (event.ctrlKey == true) {
+      event.preventDefault();
+    }
   });
   
-// appel de la fonction permettant de gérer les évennements tactiles
-hammerIt(drawspace[0]);
+  // appel de la fonction permettant de gérer les évennements tactiles
+  hammerIt(drawspace[0]);
 
   var webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__;
   var bricks={};
@@ -260,9 +229,6 @@ hammerIt(drawspace[0]);
   var mode="draw";
   var noAuth=true;
   var authData;
-
-
-    
 
   // Ici commence le code du "backend"
   var legobase = new Webcom(webcom_url);
@@ -281,12 +247,6 @@ hammerIt(drawspace[0]);
 
   // Méthode appelée pour créer/modifier/supprimer une brique à la position x,y
   function updatePos(x, y) {
-    /*
-    if ($("body").scale != 1) {
-      console.log('ok');
-       x = 20;
-       y = 20;
-    } */
 
     // On "instancie" une nouvelle brique avec comme id "x-y" (c'est plus lisible coté forge)
     var brick=legobase.child(domain+"/"+x+"-"+y);
@@ -326,13 +286,12 @@ hammerIt(drawspace[0]);
     
     bricks[brick.x+"-"+brick.y]=brick_div;
     
-    $(".drawspace").append(brick_div);
+    drawspace.append(brick_div);
 	  $("#bricks_count").html(Object.keys(bricks).length);
   }); 
 
   // Callback sur la suppression d'une brique
   legobase.child(domain).on('child_removed', function(snapshot) {
-
     var brick=snapshot.val();
     bricks[brick.x+"-"+brick.y].remove();
     delete bricks[brick.x+"-"+brick.y];
@@ -388,58 +347,50 @@ hammerIt(drawspace[0]);
     }
   }
 
-
-    $(".drawspace").on('mousedown', function(e){
-  	  e.preventDefault();
-      var target = $( e.target );
-      var options_div=target.closest(".options");
-      var position = options_div.offset() || target.offset();
-      var initialized = {
-        x :  e.pageX,
-        y :  e.pageY
-      };
+  $(".drawspace").on('mousedown', function(e){
+	  e.preventDefault();
+    var target = $( e.target );
+    var options_div=target.closest(".options");
+    var position = options_div.offset() || target.offset();
+    var initialized = {
+      x :  e.pageX,
+      y :  e.pageY
+    };
     
-  	  var handlers = {
-        mousemove : function(e){
-          e.preventDefault();
-          if (options_div.length==0) {
-            x=parseInt(e.pageX / bricksize);
-            y=parseInt(e.pageY / bricksize);
-            var new_move=x+"-"+y;
-            // Disable brick overflow outside drawspace
-            if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < drawspace.height() && e.pageX > 0 && e.pageY > 0) {
-              updatePos(x,y);
-            }
-            last_move=new_move;
-          } else { // unused
-            alert('lala');
-             options_div.css({
-              left : ( initialized.x + e.pageX - $(document).scrollLeft() ) + 'px',
-              top : ( initialized.y + e.pageY - $(document).scrollTop() ) + 'px',
-              bottom: 'inherit',
-              right: 'inherit',
-             });
+	  var handlers = {
+      mousemove : function(e){
+        e.preventDefault();
+        if (options_div.length==0) {
+          x=parseInt(e.pageX / bricksize);
+          y=parseInt(e.pageY / bricksize);
+          var new_move=x+"-"+y;
+          // Disable brick overflow outside drawspace
+          if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < drawspace.height() && e.pageX > 0 && e.pageY > 0) {
+            updatePos(x,y);
           }
-        },
-        mouseup : function(e){
-          $(this).off(handlers);   
+          last_move=new_move;
+        } else { // unused
+           options_div.css({
+            left : ( initialized.x + e.pageX - $(document).scrollLeft() ) + 'px',
+            top : ( initialized.y + e.pageY - $(document).scrollTop() ) + 'px',
+            bottom: 'inherit',
+            right: 'inherit',
+           });
         }
-      };
-      $(document).on(handlers);
-    });
+      },
+      mouseup : function(e){
+        $(this).off(handlers);   
+      }
+    };
+    $(document).on(handlers);
+  });
 
   /* Gère le click simple (ajout/suppression de briques) sur le drawspace  */
   $(".drawspace").bind("click", function(e){
-	  var target = $(e.target );
-    var x,y;
-    if (smartphone == 1 ) {
-      x=parseInt(((e.pageX - drawspace.offset().left) / bricksize)/2);
-      y=parseInt(((e.pageY - drawspace.offset().top) / bricksize)/2);
-    } else {
+    if (smartphone == 0) {
+      var x,y;
       x=parseInt(e.pageX / bricksize);
       y=parseInt(e.pageY / bricksize);
-    }
-    if (scale == 1) {
       updatePos(x,y);
     }
   });
@@ -466,5 +417,4 @@ hammerIt(drawspace[0]);
     $("body").animate({scrollLeft: leftPos - offsetLeft}, 800);
     $("body").animate({scrollTop: topPos - offsetTop}, 1);
   });
-
 });

@@ -46,7 +46,7 @@ body {
 
 .zoomspace {
     position: fixed;
-    bottom:20px;
+    bottom:30px;
     left:20px;
     width:130px;
     z-index: 2;
