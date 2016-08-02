@@ -24,7 +24,7 @@ body {
     /*width:100vw !important;
     height:100vh !important;*/
     background: url(../images/lego_orange_tile.png) repeat;
-    background-size: 100px 100px;
+    background-size: 16px 16px;
     z-index: -1;
     transform-origin: 0 0 0;
 }
@@ -170,11 +170,12 @@ hr{
 .container-titlebar-menu {
     background-color: black;
     border-radius: 10px;
-    width:auto;
-    height:auto;
-    padding: 14px;
-    margin-right: 22px;
-    margin-top: 12px;
+    width:70px;
+    height:60px;
+    padding-top: 22px;
+    padding-right: 15px;
+    margin-right: 10px;
+    margin-top: 5px;
 }
 
 .drawTools-buttons-container {
@@ -222,6 +223,10 @@ hr{
     font-size: 4em;
 }
 
+.menu-icon {
+    height:16px;
+    width:30px;
+}
 
 .menu-title {
     height: 77.778px;

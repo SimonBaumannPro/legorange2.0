@@ -5,33 +5,34 @@ $(window).on("load", function (){
 
   $(document).foundation();
 
-  var drawspace = $(".drawspace");
-  var btn_dezoom = document.getElementById('btn_dezoom');
-  var offCanvas = $("#offCanvasRight");
-  var eraseAll = $("#eraseAll");
-  var brique = $(".brick");
-  var bricksize = 16;//parseInt($(document).width()/100);
-  var bricksizepx = bricksize+"px";
-  var smartphone = 1;  // initialisation en mode smartphone
-  var scale = 1;
-  var zoomed = 0;
-  var pX = 0;
-  var pY = 0;
+  var drawspace = $(".drawspace"),
+      btn_dezoom = document.getElementById('btn_dezoom'),
+      offCanvas = $("#offCanvasRight"),
+      eraseAll = $("#eraseAll"),
+      brique = $(".brick"),
+      bricksize = 16, //parseInt($(document).width()/100);
+      bricksizepx = bricksize+"px",
+      smartphone = 1,  // initialisation en mode smartphone
+      scale = 1,
+      last_posX = 0,
+      last_posY = 0;
 
   // test si mobile device ou non
   if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
     smartphone = 0;
     console.log('smartphone = 0');
     $('body').css('position', 'absolute');
-  }  
+  } else {
+    $('body').css('overflow', 'hidden');
+  }
 
   // Initialisation de la taille des briques du drawspace
   drawspace.css('background-size', bricksizepx + " " + bricksizepx);
 
-  // $(window).resize(function() {
-  //   bricksize = parseInt($(window).width()/100);
-  //   location.reload();
-  // });
+   $(window).resize(function() {
+     bricksize = parseInt($(window).width()/100);
+     location.reload();
+   });
 
   /* ------------ Gestion du tactile ------------ */
 
@@ -46,18 +47,17 @@ $(window).on("load", function (){
 
     var posX = 0,
         posY = 0,
-        last_posX = 0,
-        last_posY = 0,
+        
         max_pos_x = 0,
         max_pos_y = 0,
         min_pos = 0,
         transform = "",
         ds = pDrawspace;
 
-    hammertime.on('tap pan pinch panend pinchend', function(ev) {
+    // Tap to zoom
+    hammertime.on('tap', function(ev) {
 
-      // Tap to zoom
-      if (ev.type == "tap" && scale == 1 && smartphone == 1) {
+      if (scale == 1 && smartphone == 1) {
         
         btn_dezoom.style.visibility = "visible";
         btn_dezoom.style.display = "inline";
@@ -80,23 +80,28 @@ $(window).on("load", function (){
         last_posX = posX;
         last_posY = posY;
 
-        pX = posX;
-        pY = posY;
-
         max_pos_x =  ds.clientWidth - window.innerWidth;
         max_pos_y =  ds.clientHeight - window.innerHeight;
-      } 
-
-      if (ev.type == "tap" && scale == 2 && smartphone == 1) {
+      }
+      // Ajout des briques si smartphone
+      if (scale == 2 && smartphone == 1) {
         var x,y;
         x=parseInt(((ev.center.x - drawspace.offset().left) / bricksize)/2);
         y=parseInt(((ev.center.y- drawspace.offset().top) / bricksize)/2);
         updatePos(x,y);
-
       }
 
+      transform =
+        "translate(" + posX + "px," + posY + "px) " +
+        "scale(" + scale + ")";
+
+      ds.style.transform = transform;
+    }); 
+
+    hammertime.on('pan', function(ev)  {
+
       // Pan in draw mode 
-      if (ev.type == "pan" && scale == 2 && smartphone == 1) {
+      if (scale == 2 && smartphone == 1) {
         
         posX = last_posX + ev.deltaX;
         posY = last_posY + ev.deltaY;
@@ -116,16 +121,14 @@ $(window).on("load", function (){
         if (posY < -max_pos_y) {
           posY = -max_pos_y;
         }
-
-        pX = posX;
-        pY = posY;
       }
 
       // Pan in navigation mode
-      if (ev.type == "pan" && scale == 1 && smartphone == 1) {
+      if (scale == 1 && smartphone == 1) {
         
         posX = last_posX + ev.deltaX;
         posY = last_posY + ev.deltaY;
+
         max_pos_x =  ds.clientWidth - window.innerWidth;
         max_pos_y =  ds.clientHeight - window.innerHeight;
 
@@ -143,44 +146,40 @@ $(window).on("load", function (){
         }
       }
 
-      // Panend
-      if (ev.type == "panend"){
-        last_posX = posX < max_pos_x ? posX : max_pos_x;
-        last_posY = posY < max_pos_y ? posY : max_pos_y;
-      }
+      transform =
+        "translate(" + posX + "px," + posY + "px) " +
+        "scale(" + scale + ")";
 
-      if (scale) {
-        transform =
-          "translate(" + posX + "px," + posY + "px) " +
-          "scale(" + scale + ")";
-      }
-
-      if (transform) {
-        ds.style.transform = transform;
-        //$('.drawspace').css("-webkit-backface-visibility", "hidden");
-      }
+      ds.style.transform = transform;
     });
 
-    btn_dezoom.onclick = function() {
-      try {
-        if (window.getComputedStyle(ds, null).getPropertyValue('-webkit-transform').toString() != "matrix(1, 0, 0, 1, 0, 0)") {
-          transform =
-            "translate3d("+0+","+0+", 0) " +
-            "scale3d(1, 1, 1) ";
-        }
-      } catch (err) {}
-      
-      ds.style.webkitTransform = transform;
-      transform = "";
-      scale = 1;
-      last_scale = 2;
-
-      btn_dezoom.style.visibility = "hidden";
-      btn_dezoom.style.display = "none";
-
-      zoomed = 0;
-    }
+    // Déclanché à la fin d'un Pan
+    hammertime.on('panend', function(ev) {
+ 
+      last_posX = posX < max_pos_x ? posX : max_pos_x;
+      last_posY = posY < max_pos_y ? posY : max_pos_y;
+    });
   } 
+
+  btn_dezoom.onclick = function() {
+      
+    var transform = "";
+
+    transform =
+      "translate(0,0) " +
+      "scale(1) ";
+      
+    drawspace.css('transform', transform);
+    transform = "";
+
+    last_scale = 2;      
+    scale = 1;
+    last_posY = 0;
+    last_posX = 0;
+
+    btn_dezoom.style.visibility = "hidden";
+    btn_dezoom.style.display = "none";
+  }
 
   $(function() {      
     $("body").swipe( {
@@ -192,7 +191,7 @@ $(window).on("load", function (){
          }
       },
       swipeLeft:function(event, direction, distance, duration, fingerCount) {
-        if (fingerCount == 1 && duration < 200) {
+        if (fingerCount == 1 && duration < 400) {
           offCanvas.foundation("open", offCanvas);
         }        
       },
