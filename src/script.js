@@ -1,6 +1,9 @@
 require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
 
+
+
+
 $(window).on("load", function (){
 
   $(document).foundation();
@@ -12,19 +15,15 @@ $(window).on("load", function (){
       brique = $(".brick"),
       bricksize = 16, //parseInt($(document).width()/100);
       bricksizepx = bricksize+"px",
-      smartphone = 1,  // initialisation en mode smartphone
+      smartphone,
       scale = 1,
       last_posX = 0,
       last_posY = 0;
 
-  // test si mobile device ou non
-  if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-    smartphone = 0;
-    console.log('smartphone = 0');
-    $('body').css('position', 'absolute');
-  } else {
-    $('body').css('overflow', 'hidden');
-  }
+  // = 1 si mobile, 0 sinon
+  smartphone = detectDevice();
+
+  //initBrickSize(bricksizepx);
 
   // Initialisation de la taille des briques du drawspace
   drawspace.css('background-size', bricksizepx + " " + bricksizepx);
@@ -191,7 +190,7 @@ $(window).on("load", function (){
          }
       },
       swipeLeft:function(event, direction, distance, duration, fingerCount) {
-        if (fingerCount == 1 && duration < 400) {
+        if (fingerCount == 1 && duration < 300) {
           offCanvas.foundation("open", offCanvas);
         }        
       },
@@ -233,11 +232,13 @@ $(window).on("load", function (){
   var legobase = new Webcom(webcom_url);
   var domain="brick";
 
-  if (m=window.location.href.match(/#(.*)$/)) {
-    if (m && m[1].match(/^[A-Za-z0-9_\-]+$/)) {
-      domain=m[1];
-    }
-  }
+  // if (m=window.location.href.match(/#(.*)$/)) {
+  //   console.log("1");
+  //   if (m && m[1].match(/^[A-Za-z0-9_\-]+$/)) {
+  //     domain=m[1];
+  //     console.log("2");
+  //   }
+  // }
 
   /* Supprime toutes les briques du drawspace */
   eraseAll.click(function() {
@@ -246,6 +247,7 @@ $(window).on("load", function (){
 
   // Méthode appelée pour créer/modifier/supprimer une brique à la position x,y
   function updatePos(x, y) {
+    console.log("updatePos Called")
 
     // On "instancie" une nouvelle brique avec comme id "x-y" (c'est plus lisible coté forge)
     var brick=legobase.child(domain+"/"+x+"-"+y);
@@ -355,7 +357,7 @@ $(window).on("load", function (){
       x :  e.pageX,
       y :  e.pageY
     };
-    
+     
 	  var handlers = {
       mousemove : function(e){
         e.preventDefault();
@@ -417,3 +419,17 @@ $(window).on("load", function (){
     $("body").animate({scrollTop: topPos - offsetTop}, 1);
   });
 });
+
+
+
+/* Détecte si l'application est utilisé sur mobile/tablettes ou PC */
+function detectDevice() {
+  if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    console.log('smartphone =  0');
+    $('body').css('position', 'absolute');
+    return 0;
+  } else {
+    $('body').css('overflow', 'hidden');
+    return 1;
+  }
+}
