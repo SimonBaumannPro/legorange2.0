@@ -6,8 +6,9 @@ var drawspace = $(".drawspace"),
     btn_dezoom = document.getElementById('btn_dezoom'),
     offCanvas = $("#offCanvasRight"),
     eraseAll = $("#eraseAll"),
-    bricksize = 16, //parseInt($(document).width()/100);
+    bricksize = 20, //parseInt($(document).width()/100);
     smartphone,
+    last_scale,
     scale = 1,
     last_posX = 0,
     last_posY = 0,
@@ -42,6 +43,12 @@ $(window).on("load", function (){
     dezoom();
   };
   
+  $(window).resize(function() {
+    globalInit();
+     // bricksize = parseInt($(window).width()/100);
+     // location.reload();
+   });  
+
   $(function() {
     $("body").swipe( {
       swipeStatus:function(event, phase, direction, distance , duration , fingerCount) {
@@ -79,7 +86,14 @@ $(window).on("load", function (){
   // Callback sur l'ajout d'une nouvelle brick
   legobase.child(domain).on('child_added', function(snapshot) {
     var brick=snapshot.val();
-    var brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksize+"px" + " " + bricksize+"px");
+    var brick_div;
+
+    //TODO Asimplifier
+    if (smartphone == 1) {
+      brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksize+"px" + " " + bricksize+"px").css('position', 'fixed');
+    } else {
+      brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksize+"px" + " " + bricksize+"px");
+    }
 
     if (brick.uid) {
       brick_div.addClass(brick.uid.replace(":", "_"));
@@ -133,33 +147,13 @@ $(window).on("load", function (){
       updatePos(x,y);
     }
   });
-
-  // Remise en place de la scrollbar à sa position iniliale après avoir déclanché l'Off Canvas.
-//   var leftPos,
-//       topPos,
-//       offsetTop,
-//       offsetLeft;
-//   $("#buttonToggle").click(function() {
-//      offsetTop = drawspace.offset().top;
-//      offsetLeft = drawspace.offset().left;
-//     if (!offCanvas.hasClass("is-open") && smartphone == 0) {
-//       leftPos = $('body').scrollLeft();
-//       topPos = $('body').scrollTop();
-//       $("body").animate({scrollLeft: leftPos + 300}, 800);
-//     } else {
-//       $("body").animate({scrollLeft: leftPos - offsetLeft}, 800);
-//       $("body").animate({scrollTop: topPos - offsetTop}, 1);
-//     }
-//   });
-//   // Evenement déclanché lors de la fermeture de l'offCanvas
-//   $(document).on('closed.zf.offcanvas', function() {
-//     $("body").animate({scrollLeft: leftPos - offsetLeft}, 800);
-//     $("body").animate({scrollTop: topPos - offsetTop}, 1);
-//   });
  });
 
 
 function globalInit() {
+
+  // = 1 si mobile, 0 sinon
+  smartphone = detectDevice();
 
   /* hide dezoom button */
   if (smartphone == 0 || (smartphone == 1 && scale == 1)) {
@@ -174,19 +168,21 @@ function globalInit() {
     }
   });
 
-  // = 1 si mobile, 0 sinon
-  smartphone = detectDevice();
- 
   // Initialisation of the drawspace's brick size
   initBrickSize(bricksize+"px");
+
+  if ($('body').height > drawspace.height) {
+    //TODO : remove the white space outside the drawspace
+  }
 }
 
 
 /* Détecte si l'application est utilisé sur mobile/tablettes ou PC */
 function detectDevice() {
   if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-    console.log('smartphone =  0');
     $('body').css('position', 'absolute');
+    offCanvas.addClass('reveal-for-large');
+    $('.container-titlebar-menu').css('display', 'none');
     return 0;
   } else {
     $('body').css('overflow', 'hidden');
@@ -224,10 +220,6 @@ function dezoom() {
 function initBrickSize(size) {
 
   drawspace.css('background-size', size + " " + size);
-   // $(window).resize(function() {
-   //   bricksize = parseInt($(window).width()/100);
-   //   location.reload();
-   // });  
 }
 
 /* ------------ Gestion du tactile ------------ */
@@ -247,6 +239,14 @@ function hammerIt(pDrawspace) {
 
   // Tap to zoom
   hammertime.on('tap', function(ev) {
+
+    // Ajout des briques si smartphone
+    if (scale == 2 && smartphone == 1) {
+      var x,y;
+      x=parseInt(((ev.center.x - drawspace.offset().left) / bricksize)/2);
+      y=parseInt(((ev.center.y- drawspace.offset().top) / bricksize)/2);
+      updatePos(x,y);
+    }
 
     if (scale == 1 && smartphone == 1) {
       
@@ -275,14 +275,7 @@ function hammerIt(pDrawspace) {
       max_pos_y =  ds.clientHeight - window.innerHeight;
     }
 
-    // Ajout des briques si smartphone
-    if (scale == 2 && smartphone == 1) {
-      var x,y;
-      x=parseInt(((ev.center.x - drawspace.offset().left) / bricksize)/2);
-      y=parseInt(((ev.center.y- drawspace.offset().top) / bricksize)/2);
-      updatePos(x,y);
-    }
-
+    
     transcale(posX, posY, scale);
   }); 
 
@@ -379,7 +372,7 @@ $(".colors .brickMenu").click(function(e) {
 });
 
 /* empèche l'affichage des couleurs lors du déroulement de la liste si on est en mode "erase" */
-$("#titleDT").click(function() {
+$("#menu-DT").click(function() {
   if (mode == "erase") {
     $(".ul-drawTools").attr("style", "height: 100px");
     $(".drawTools-buttons-container").css("height", "100%");
