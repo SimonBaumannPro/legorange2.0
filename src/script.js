@@ -90,7 +90,7 @@ $(window).on("load", function (){
 
     //TODO Asimplifier
     if (smartphone == 1) {
-      brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksize+"px" + " " + bricksize+"px").css('position', 'fixed');
+      brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksize+"px" + " " + bricksize+"px").css('position', 'fixed').css('background-attachment', 'local');
     } else {
       brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksize+"px" + " " + bricksize+"px");
     }
