@@ -6,7 +6,7 @@
 require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
 
-
+var titi;
 var drawspace = $(".drawspace"),
     btn_dezoom = document.getElementById('btn_dezoom'),
     offCanvas = $("#offCanvasRight"),
