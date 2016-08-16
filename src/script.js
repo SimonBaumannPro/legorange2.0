@@ -1,3 +1,8 @@
+
+
+// https://io.datasync.orange.com/samples/legorange/
+
+
 require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
 
@@ -13,18 +18,18 @@ var drawspace = $(".drawspace"),
     last_posX = 0,
     last_posY = 0,
     webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__,
+    legobase = new Webcom(webcom_url),
     bricks={},
     last_move="",
     color="white",
     mode="draw",
     noAuth=true,
     authData ="",
-    legobase = new Webcom(webcom_url),
     domain="brick";
 
 
 $(window).on("load", function (){
-
+  
   $(document).foundation();
 
   // Initialisation globale du contexte
@@ -140,6 +145,7 @@ $(window).on("load", function (){
 
   /* Gère le click simple (ajout/suppression de briques) sur le drawspace  */
   drawspace.bind("click", function(e){
+    console.log('click');
     if (smartphone == 0) {
       var x,y;
       x=parseInt(e.pageX / bricksize);
