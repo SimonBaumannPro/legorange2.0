@@ -1,7 +1,18 @@
 
-body {
-    height:100%;
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
 
+body {
+    width:5000px;
+    height:5000px;
+    padding: 0;
+    margin: 0;
+    background: url(../images/lego_orange_tile.png) repeat;
+    background-size: 15px 15px;
+    z-index: -1;
+    transform-origin: 0 0 0; /* pour que les transfo se fassent toujours à partir du point (0,0)*/
 }
 
 .fixed {
@@ -22,7 +33,7 @@ body {
     height:5000px;
     padding: 0;
     background: url(../images/lego_orange_tile.png) repeat;
-    background-size: 16px 16px;
+    background-size: 15px 15px;
     z-index: -1;
     transform-origin: 0 0 0; /* pour que les transfo se fassent toujours à partir du point (0,0)*/
 }

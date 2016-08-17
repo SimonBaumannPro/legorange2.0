@@ -3,15 +3,14 @@
 // https://io.datasync.orange.com/samples/legorange/
 
 
-require('./assets/styles/app.scss');
+//require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
 
-var titi;
 var drawspace = $(".drawspace"),
-    btn_dezoom = document.getElementById('btn_dezoom'),
-    offCanvas = $("#offCanvasRight"),
-    eraseAll = $("#eraseAll"),
-    bricksize = 20, //parseInt($(document).width()/100);
+    //btn_dezoom = document.getElementById('btn_dezoom'),
+    //offCanvas = $("#offCanvasRight"),
+    //eraseAll = $("#eraseAll"),
+    bricksize = 15, //parseInt($(document).width()/100);
     smartphone,
     last_scale,
     scale = 1,
@@ -27,16 +26,14 @@ var drawspace = $(".drawspace"),
     authData ="",
     domain="brick";
 
-
 $(window).on("load", function (){
-  
   $(document).foundation();
 
   // Initialisation globale du contexte
   globalInit();
 
   // Gestion des évenements tactiles (pan & zoom)
-  hammerIt(drawspace[0]);
+  // hammerIt(drawspace[0]);
 
   // Gestion de l'authentification
   if (noAuth) {
@@ -44,43 +41,43 @@ $(window).on("load", function (){
   }
 
   // drawspace scale from 2 to 1
-  btn_dezoom.onclick = function(){
-    dezoom();
-  };
+  // btn_dezoom.onclick = function(){
+  //   dezoom();
+  // };
   
   $(window).resize(function() {
-    globalInit();
+    //globalInit();
      // bricksize = parseInt($(window).width()/100);
      // location.reload();
    });  
 
-  $(function() {
-    $("body").swipe( {
-      swipeStatus:function(event, phase, direction, distance , duration , fingerCount) {
-        if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
-          //The handlers below fire after the status, 
-          // so we can change the text here, and it will be replaced if the handlers below fire
-          $(this).find('#swipe_text').text("No swipe was made");
-        }
-      },
-      swipeLeft:function(event, direction, distance, duration, fingerCount) {
-        if (fingerCount == 1 && duration < 250) {
-          offCanvas.foundation("open", offCanvas);
-        }        
-      },
-      swipeRight:function(event, direction, distance, duration, fingerCount) {
-        if (fingerCount == 1) {
-          offCanvas.foundation('close');
-        }
-      },
-      fingers:$.fn.swipe.fingers.ALL  
-    });
-  });
+  // $(function() {
+  //   $("body").swipe( {
+  //     swipeStatus:function(event, phase, direction, distance , duration , fingerCount) {
+  //       if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
+  //         //The handlers below fire after the status, 
+  //         // so we can change the text here, and it will be replaced if the handlers below fire
+  //         $(this).find('#swipe_text').text("No swipe was made");
+  //       }
+  //     },
+  //     swipeLeft:function(event, direction, distance, duration, fingerCount) {
+  //       if (fingerCount == 1 && duration < 250) {
+  //         offCanvas.foundation("open", offCanvas);
+  //       }        
+  //     },
+  //     swipeRight:function(event, direction, distance, duration, fingerCount) {
+  //       if (fingerCount == 1) {
+  //         offCanvas.foundation('close');
+  //       }
+  //     },
+  //     fingers:$.fn.swipe.fingers.ALL  
+  //   });
+  // });
 
   /* Supprime toutes les briques du drawspace */
-  eraseAll.click(function() {
-    legobase.child(domain).remove();
-  });
+  // eraseAll.click(function() {
+  //   legobase.child(domain).remove();
+  // });
 
   // Callback sur changement d'une brique. Dans notre cas c'est juste la couleur qui change
   legobase.child(domain).on('child_changed', function(snapshot) {
@@ -92,13 +89,8 @@ $(window).on("load", function (){
   legobase.child(domain).on('child_added', function(snapshot) {
     var brick=snapshot.val();
     var brick_div;
-
-    //TODO Asimplifier
-    if (smartphone == 1) {
-      brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksize+"px" + " " + bricksize+"px").css('position', 'fixed').css('background-attachment', 'local');
-    } else {
-      brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksize+"px" + " " + bricksize+"px");
-    }
+    
+    brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksize+"px" + " " + bricksize+"px");
 
     if (brick.uid) {
       brick_div.addClass(brick.uid.replace(":", "_"));
@@ -106,7 +98,7 @@ $(window).on("load", function (){
     
     bricks[brick.x+"-"+brick.y]=brick_div;
     
-    drawspace.append(brick_div);
+    $("body").append(brick_div);
     $("#bricks_count").html(Object.keys(bricks).length);
   }); 
 
@@ -119,7 +111,7 @@ $(window).on("load", function (){
   });
 
 
-  drawspace.on('mousedown', function(e){
+  $("body").on('mousedown', function(e){
     e.preventDefault();
 
     var handlers = {
@@ -131,7 +123,7 @@ $(window).on("load", function (){
         var new_move=x+"-"+y;
 
         // Disable brick overflow outside drawspace
-        if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < drawspace.height() && e.pageX > 0 && e.pageY > 0) {
+        if (new_move!=last_move && e.pageX < $("body").width() && e.pageY < $("body").height() && e.pageX > 0 && e.pageY > 0) {
           updatePos(x,y);
         }
         last_move=new_move;
@@ -144,14 +136,13 @@ $(window).on("load", function (){
   });
 
   /* Gère le click simple (ajout/suppression de briques) sur le drawspace  */
-  drawspace.bind("click", function(e){
-    console.log('click');
-    if (smartphone == 0) {
+  $("body").bind("click", function(e){
+    //if (smartphone === 0) {
       var x,y;
       x=parseInt(e.pageX / bricksize);
       y=parseInt(e.pageY / bricksize);
       updatePos(x,y);
-    }
+    //}
   });
  });
 
@@ -159,17 +150,17 @@ $(window).on("load", function (){
 function globalInit() {
 
   // = 1 si mobile, 0 sinon
-  smartphone = detectDevice();
+  //smartphone = detectDevice();
 
   /* hide dezoom button */
-  if (smartphone == 0 || (smartphone == 1 && scale == 1)) {
-    btn_dezoom.style.visibility = "hidden";
-    btn_dezoom.style.display = "none";
+  if (smartphone === 0 || (smartphone == 1 && scale == 1)) {
+    // btn_dezoom.style.visibility = "hidden";
+    // btn_dezoom.style.display = "none";
   }
 
   /* Disable Ctrl+mouseWheel zoom on cross-browser */
   $(window).bind('mousewheel DOMMouseScroll', function (event) {
-    if (event.ctrlKey == true) {
+    if (event.ctrlKey === true) {
       event.preventDefault();
     }
   });
@@ -177,7 +168,7 @@ function globalInit() {
   // Initialisation of the drawspace's brick size
   initBrickSize(bricksize+"px");
 
-  if ($('body').height > drawspace.height) {
+  if ($('body').height > $("body").height) {
     //TODO : remove the white space outside the drawspace
   }
 }
@@ -187,11 +178,10 @@ function globalInit() {
 function detectDevice() {
   if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
     $('body').css('position', 'absolute');
-    offCanvas.addClass('reveal-for-large');
-    $('.container-titlebar-menu').css('display', 'none');
+    //offCanvas.addClass('reveal-for-large');
+    //$('.container-titlebar-menu').css('display', 'none');
     return 0;
   } else {
-    $('body').css('overflow', 'hidden');
     return 1;
   }
 }
@@ -205,7 +195,7 @@ function transcale (x, y, sc) {
   transform = "translate(" + x + "px," + y + "px) " +
               "scale(" + sc + ")";
 
-  drawspace.css('transform', transform)
+  $("body").css('transform', transform);
   transform = " ";
 }
 
@@ -225,10 +215,11 @@ function dezoom() {
 
 function initBrickSize(size) {
 
-  drawspace.css('background-size', size + " " + size);
+  $("body").css('background-size', size + " " + size);
 }
 
 /* ------------ Gestion du tactile ------------ */
+
 
 function hammerIt(pDrawspace) {
 
@@ -387,7 +378,7 @@ $("#menu-DT").click(function() {
 });
 
 $(".button").click(function(e){
-  change_mode($(this).attr("id"))
+  change_mode($(this).attr("id"));
 });
 
 /* Manage the display mode in the off-canvas menue */
