@@ -3,53 +3,67 @@
 // https://io.datasync.orange.com/samples/legorange/
 
 
-//require('./assets/styles/app.scss');
+require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
+//require('./assets/js/webcom_fct.js');
+
+var webcom = require('./assets/js/webcom_fct.js');
+
 
 var drawspace = $(".drawspace"),
-    //btn_dezoom = document.getElementById('btn_dezoom'),
-    //offCanvas = $("#offCanvasRight"),
-    //eraseAll = $("#eraseAll"),
-    bricksize = 15, //parseInt($(document).width()/100);
+    btn_dezoom = document.getElementById('btn_dezoom'),
+    offCanvas = $("#offCanvasRight"),
+    eraseAll = $("#eraseAll"),
+    last_move="",
     smartphone,
     last_scale,
     scale = 1,
     last_posX = 0,
-    last_posY = 0,
-    webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__,
-    legobase = new Webcom(webcom_url),
-    bricks={},
-    last_move="",
-    color="white",
-    mode="draw",
-    noAuth=true,
-    authData ="",
-    domain="brick";
+    last_posY = 0;
+
+var bricksize = webcom.bricksize;
+
 
 $(window).on("load", function (){
   $(document).foundation();
+
+// $('.drawspace').draggable({
+//   containment : $('.conteneur'),
+//   scroll : true
+// });
+
+  viewpwidth = $(window).width();
+  viewpheight = $(window).height(); 
+
+  // $('.conteneur').css('width', (drawspace.width()*2)- viewpwidth);
+  // $('.conteneur').css('height', (drawspace.height()*2)- viewpheight);
+  // $('.conteneur').css('left', -(drawspace.width() - viewpwidth));
+  // $('.conteneur').css('top', -(drawspace.height() - viewpheight));
+
+  // drawspace.css('top', drawspace.height() - viewpheight);
+  // drawspace.css('left', drawspace.width() - viewpwidth);
+
+
+// console.log('offtop = ' + drawspace.width() + ' - offleft = ' + viewpwidth);
+
 
   // Initialisation globale du contexte
   globalInit();
 
   // Gestion des évenements tactiles (pan & zoom)
-  // hammerIt(drawspace[0]);
+   //hammerIt(drawspace[0]);
 
-  // Gestion de l'authentification
-  if (noAuth) {
-    authData={uid: "anonymous", provider: "none", none: {displayName: "anonymous"}};
-  }
-
-  // drawspace scale from 2 to 1
-  // btn_dezoom.onclick = function(){
-  //   dezoom();
-  // };
+  //drawspace scale from 2 to 1
+  btn_dezoom.onclick = function(){
+    console.log('btn dezoom clicked');
+    dezoom();
+  };
   
-  $(window).resize(function() {
-    //globalInit();
-     // bricksize = parseInt($(window).width()/100);
-     // location.reload();
-   });  
+  // $(window).resize(function() {
+  //    globalInit();
+  //    bricksize = parseInt($(window).width()/100);
+  //    location.reload();
+  //  });  
 
   // $(function() {
   //   $("body").swipe( {
@@ -75,87 +89,108 @@ $(window).on("load", function (){
   // });
 
   /* Supprime toutes les briques du drawspace */
-  // eraseAll.click(function() {
-  //   legobase.child(domain).remove();
-  // });
-
-  // Callback sur changement d'une brique. Dans notre cas c'est juste la couleur qui change
-  legobase.child(domain).on('child_changed', function(snapshot) {
-    var brick=snapshot.val();
-    bricks[brick.x+"-"+brick.y].removeClass().addClass("brick "+brick.color+" "+brick.uid.replace(":", "_"));  
-  });
-  
-  // Callback sur l'ajout d'une nouvelle brick
-  legobase.child(domain).on('child_added', function(snapshot) {
-    var brick=snapshot.val();
-    var brick_div;
-    
-    brick_div=$('<div>', {class: "brick "+brick.color}).css('top', (bricksize*brick.y)+"px").css('left', (bricksize*brick.x)+"px").css('width', bricksize+"px").css('height', bricksize+"px").css('background-size', bricksize+"px" + " " + bricksize+"px");
-
-    if (brick.uid) {
-      brick_div.addClass(brick.uid.replace(":", "_"));
-    }
-    
-    bricks[brick.x+"-"+brick.y]=brick_div;
-    
-    $("body").append(brick_div);
-    $("#bricks_count").html(Object.keys(bricks).length);
-  }); 
-
-  // Callback sur la suppression d'une brique
-  legobase.child(domain).on('child_removed', function(snapshot) {
-    var brick=snapshot.val();
-    bricks[brick.x+"-"+brick.y].remove();
-    delete bricks[brick.x+"-"+brick.y];
-    $("#bricks_count").html(Object.keys(bricks).length);
+  eraseAll.click(function() {
+    eraseAll();
   });
 
+  drawspace.on('mousedown', function(e){
+    if (smartphone === 0) {
+      e.preventDefault();
 
-  $("body").on('mousedown', function(e){
-    e.preventDefault();
+      var handlers = {
+        mousemove : function(e){
+          e.preventDefault();
+          x=parseInt(e.pageX / bricksize);
+          y=parseInt(e.pageY / bricksize);
+          var new_move=x+"-"+y;
 
-    var handlers = {
-      mousemove : function(e){
-        e.preventDefault();
-
-        x=parseInt(e.pageX / bricksize);
-        y=parseInt(e.pageY / bricksize);
-        var new_move=x+"-"+y;
-
-        // Disable brick overflow outside drawspace
-        if (new_move!=last_move && e.pageX < $("body").width() && e.pageY < $("body").height() && e.pageX > 0 && e.pageY > 0) {
-          updatePos(x,y);
+          // Disable brick overflow outside drawspace
+          if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < drawspace.height() && e.pageX > 0 && e.pageY > 0) {
+            webcom.updatePos(x,y);
+          }
+          last_move=new_move;
+        },
+        mouseup : function(e){
+          $(this).off(handlers);   
         }
-        last_move=new_move;
-      },
-      mouseup : function(e){
-        $(this).off(handlers);   
-      }
     };
     $(document).on(handlers);
+  }
   });
 
   /* Gère le click simple (ajout/suppression de briques) sur le drawspace  */
-  $("body").bind("click", function(e){
-    //if (smartphone === 0) {
-      var x,y;
+  drawspace.bind("click", function(e){
+    var x,y;
+    console.log("x = " + e.pageX + " - y = " + e.pageY);
+    if (smartphone === 0) {
       x=parseInt(e.pageX / bricksize);
       y=parseInt(e.pageY / bricksize);
-      updatePos(x,y);
-    //}
+      webcom.updatePos(x,y);
+    }
+
+    // Ajout des briques si smartphone mode draw
+    if (smartphone === 1 && scale === 2) {
+      x=parseInt(((e.pageX - drawspace.offset().left) / bricksize)/2);
+      y=parseInt(((e.pageY - drawspace.offset().top) / bricksize)/2);
+      webcom.updatePos(x,y);
+    }
+
+    if (smartphone === 1 && scale === 1) {
+      
+      btn_dezoom.style.visibility = "visible";
+      btn_dezoom.style.display = "inline";
+
+      last_scale = 1;
+      scale = 2;
+
+      var offX = drawspace.offset().left*scale ;
+      var offY = drawspace.offset().top*scale ;
+
+      var iniMouseX = e.pageX/2 + offX;     // mouse position at zoom scale 1
+      var iniMouseY = e.pageY/2 + offY;
+
+      var newMouseX = iniMouseX * scale;      // mouse position at new scale
+      var newMouseY = iniMouseY * scale;
+      
+      posX = iniMouseX;
+      posY = iniMouseY;
+
+      last_posX = posX;
+      last_posY = posY;
+
+      // max_pos_x =  drawspace.clientWidth - window.innerWidth;
+      // max_pos_y =  drawspace.clientHeight - window.innerHeight;
+
+      transcale(posX, posY, scale);
+    }
   });
  });
+
+/* Effectue une translation et un scale sur le drawspace */
+function transcale (x, y, sc) {
+
+  var transform = "";
+
+  transform = "scale(" + sc + ")";
+  
+  $('body').scrollLeft(x);
+  $('body').scrollTop(y);
+  drawspace.css('transform', transform);
+
+  console.log(x + " - " + y + " - " + sc);
+  transform = " ";
+}
 
 
 function globalInit() {
 
   // = 1 si mobile, 0 sinon
-  //smartphone = detectDevice();
+  smartphone = detectDevice();
 
   /* hide dezoom button */
   if (smartphone === 0 || (smartphone == 1 && scale == 1)) {
-    // btn_dezoom.style.visibility = "hidden";
-    // btn_dezoom.style.display = "none";
+     btn_dezoom.style.visibility = "hidden";
+     btn_dezoom.style.display = "none";
   }
 
   /* Disable Ctrl+mouseWheel zoom on cross-browser */
@@ -174,52 +209,26 @@ function globalInit() {
 }
 
 
-/* Détecte si l'application est utilisé sur mobile/tablettes ou PC */
-function detectDevice() {
-  if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-    $('body').css('position', 'absolute');
-    //offCanvas.addClass('reveal-for-large');
-    //$('.container-titlebar-menu').css('display', 'none');
-    return 0;
-  } else {
-    return 1;
-  }
-}
-
-
-/* Effectue une translation et un scale sur le drawspace */
-function transcale (x, y, sc) {
-
-  var transform = "";
-
-  transform = "translate(" + x + "px," + y + "px) " +
-              "scale(" + sc + ")";
-
-  $("body").css('transform', transform);
-  transform = " ";
-}
-
 /* Dezoom le drawspace à son état initial */
 function dezoom() {
+  console.log('fct dezoom triggered');
+  //transcale(0, 0, 1);
 
-  transcale(0, 0, 1);
+  drawspace.css('transform', 'none');
 
   last_scale = 2;      
   scale = 1;
-  last_posY = 0;
-  last_posX = 0;
 
   btn_dezoom.style.visibility = "hidden";
   btn_dezoom.style.display = "none";
 }
 
+/* set the size of the drawspace's background */
 function initBrickSize(size) {
-
-  $("body").css('background-size', size + " " + size);
+  drawspace.css('background-size', size + " " + size);
 }
 
 /* ------------ Gestion du tactile ------------ */
-
 
 function hammerIt(pDrawspace) {
 
@@ -236,16 +245,16 @@ function hammerIt(pDrawspace) {
 
   // Tap to zoom
   hammertime.on('tap', function(ev) {
-
+alert('lol');
     // Ajout des briques si smartphone
     if (scale == 2 && smartphone == 1) {
       var x,y;
       x=parseInt(((ev.center.x - drawspace.offset().left) / bricksize)/2);
       y=parseInt(((ev.center.y- drawspace.offset().top) / bricksize)/2);
-      updatePos(x,y);
+      webcom.updatePos(x,y);
     }
 
-    if (scale == 1 && smartphone == 1) {
+    if (scale == 2 && smartphone == 1) {
       
       btn_dezoom.style.visibility = "visible";
       btn_dezoom.style.display = "inline";
@@ -275,87 +284,20 @@ function hammerIt(pDrawspace) {
     
     transcale(posX, posY, scale);
   }); 
-
-  hammertime.on('pan', function(ev)  {
-
-    // Pan in draw mode 
-    if (scale == 2 && smartphone == 1) {
-      
-      posX = last_posX + ev.deltaX;
-      posY = last_posY + ev.deltaY;
-
-      max_pos_x =  ds.clientWidth*2 - window.innerWidth;
-      max_pos_y =  ds.clientHeight*2 - window.innerHeight;
-
-      if (posX > 0) {
-        posX = min_pos;
-      }
-      if (posX < -max_pos_x) {
-        posX = -max_pos_x;
-      }
-      if (posY > 0) {
-        posY = min_pos;
-      }
-      if (posY < -max_pos_y) {
-        posY = -max_pos_y;
-      }
-    }
-
-    // Pan in navigation mode
-    if (scale == 1 && smartphone == 1) {
-      
-      posX = last_posX + ev.deltaX;
-      posY = last_posY + ev.deltaY;
-
-      max_pos_x =  ds.clientWidth - window.innerWidth;
-      max_pos_y =  ds.clientHeight - window.innerHeight;
-
-      if (posX > 0) {
-        posX = min_pos;
-      }
-      if (posX < -max_pos_x) {
-        posX = -max_pos_x;
-      }
-      if (posY > 0) {
-        posY = min_pos;
-      }
-      if (posY < -max_pos_y) {
-        posY = -max_pos_y;
-      }
-    }
-    transcale(posX, posY, scale);
-  });
-
-  // Déclanché à la fin d'un Pan
-  hammertime.on('panend', function(ev) {
-
-    last_posX = posX < max_pos_x ? posX : max_pos_x;
-    last_posY = posY < max_pos_y ? posY : max_pos_y;
-  });
 }
 
-// Méthode appelée pour créer/modifier/supprimer une brique à la position x,y
-function updatePos(x, y) {
 
-  // On "instancie" une nouvelle brique avec comme id "x-y" (c'est plus lisible coté forge)
-  var brick=legobase.child(domain+"/"+x+"-"+y);
 
-  // On regarde si on a déjà une valeur pour cette positon
-  brick.once("value", function(currentData) {
-    if (currentData.val() === null) {
-      // il n'y avait pas encore de brique on l'ajoute avec la couleur actuellement sélectionné
-      if (mode=="draw" || mode=="eraseAll") 
-        brick.set({color: color, x: x, y: y, uid: authData.uid});
-    } else {
-      // il y a déjà une brique à cet emplacement. 
-      // En mode "erase" on supprime le bloc
-      if (mode=="erase")
-        brick.set(null);
-      // En mode "draw" si la couleur de la brique est modifiée on averti le backend
-      if (mode=="draw" || mode=="eraseAll") // && currentData.color != color) 
-        brick.set({color: color, x: x, y: y, uid: authData.uid});
-    }
-  });
+/* Détecte si l'application est utilisé sur mobile/tablettes ou PC */
+function detectDevice() {
+  if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    $('body').css('position', 'absolute');
+    //offCanvas.addClass('reveal-for-large');
+    //$('.container-titlebar-menu').css('display', 'none');
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 

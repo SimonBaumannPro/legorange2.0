@@ -13,12 +13,14 @@ const config = {
 				 'touchswipe',
 				 'mouse',
 				 'widgets',
+				 'draggable',
 				 'hammer',
 				 'touch-punch',
 				 'foundation',
 				 'imports?exports=>false&module=>false!webcom',	 
 		],
-		script: './src/script.js'
+		script: ['./src/script.js'
+		]
 	},
 	output: {
 		filename: 'bundle.js',
@@ -31,6 +33,7 @@ const config = {
         	jquery: 'jquery/dist/jquery.min.js',
         	'mouse' : 'jquery-ui/ui/widgets/mouse.js',
         	'widgets' : 'jquery-ui/ui/widget.js',
+        	'draggable' : 'jquery-ui/ui/widgets/draggable.js',
         	'touch-punch' : 'jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
         	'webcom': 'webcom/webcom.js',
         	'hammer' : 'hammerjs/hammer.min.js',
