@@ -171,12 +171,15 @@ console.log("transcale called");
 
 function globalInit() {
 
+  var topHeight = $('.top-bar').css('height');
+
   // = 1 si mobile, 0 sinon
   smartphone = detectDevice();
 
   /* hide dezoom button */
   if (smartphone === 0 || (smartphone == 1 && scale == 1)) {
      btn_dezoom.hide();
+     drawspace.css('margin-top', topHeight);
   }
 
 
