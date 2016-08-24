@@ -1,10 +1,10 @@
 # LegOrange 2.0
 
-[![Build Status](https://travis-ci.org/SimonBaumannPro/LegOrange.svg?branch=master)](https://travis-ci.org/SimonBaumannPro/LegOrange)
-[![Code Climate](https://codeclimate.com/github/SimonBaumannPro/LegOrange/badges/gpa.svg)](https://codeclimate.com/github/SimonBaumannPro/LegOrange)
-[![Test Coverage](https://codeclimate.com/github/SimonBaumannPro/LegOrange/badges/coverage.svg)](https://codeclimate.com/github/SimonBaumannPro/LegOrange/coverage)
-[![Dependency Status](https://david-dm.org/SimonBaumannPro/LegOrange.svg)](https://david-dm.org/SimonBaumannPro/LegOrange)
-[![devDependency Status](https://david-dm.org/SimonBaumannPro/LegOrange/dev-status.svg)](https://david-dm.org/SimonBaumannPro/LegOrange#info=devDependencies)
+[![Build Status](https://travis-ci.org/SimonBaumannPro/LegOrange.svg?branch=master)](https://travis-ci.org/SimonBaumannPro/legorange2.0)
+[![Code Climate](https://codeclimate.com/github/SimonBaumannPro/LegOrange/badges/gpa.svg)](https://codeclimate.com/github/SimonBaumannPro/legorange2.0)
+[![Test Coverage](https://codeclimate.com/github/SimonBaumannPro/LegOrange/badges/coverage.svg)](https://codeclimate.com/github/SimonBaumannPro/legorange2.0/coverage)
+[![Dependency Status](https://david-dm.org/SimonBaumannPro/LegOrange.svg)](https://david-dm.org/SimonBaumannPro/legorange2.0)
+[![devDependency Status](https://david-dm.org/SimonBaumannPro/LegOrange/dev-status.svg)](https://david-dm.org/SimonBaumannPro/legorange2.0#info=devDependencies)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
 
 Draw someting in real time with legorange.
@@ -21,7 +21,7 @@ Ensure you have [node](https://nodejs.org/en/) greater than version 4 (Code cont
 
 ### Installation
 
-1. Get repo with `git clone https://github.com/paulmusso/webpack-boilerplate.git`
+1. Get repo with `git clone https://github.com/SimonBaumannPro/legorange2.0.git`
 
 2. Delete the existing git repository by running `rm -rf .git`
 
