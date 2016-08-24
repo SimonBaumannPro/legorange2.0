@@ -11,7 +11,7 @@ var webcom = require('./assets/js/webcom_fct.js');
 
 
 var drawspace = $(".drawspace"),
-    btn_dezoom = document.getElementById('btn_dezoom'),
+    btn_dezoom = $(".dezoom"),
     offCanvas = $("#offCanvasRight"),
     eraseAll = $("#eraseAll"),
     last_move="",
@@ -23,29 +23,14 @@ var drawspace = $(".drawspace"),
 
 var bricksize = webcom.bricksize;
 
+$(window).on('beforeunload', function(){
+  $(window).scrollTop(0);
+  $(window).scrollLeft(0);
+});
 
 $(window).on("load", function (){
+
   $(document).foundation();
-
-// $('.drawspace').draggable({
-//   containment : $('.conteneur'),
-//   scroll : true
-// });
-
-  viewpwidth = $(window).width();
-  viewpheight = $(window).height(); 
-
-  // $('.conteneur').css('width', (drawspace.width()*2)- viewpwidth);
-  // $('.conteneur').css('height', (drawspace.height()*2)- viewpheight);
-  // $('.conteneur').css('left', -(drawspace.width() - viewpwidth));
-  // $('.conteneur').css('top', -(drawspace.height() - viewpheight));
-
-  // drawspace.css('top', drawspace.height() - viewpheight);
-  // drawspace.css('left', drawspace.width() - viewpwidth);
-
-
-// console.log('offtop = ' + drawspace.width() + ' - offleft = ' + viewpwidth);
-
 
   // Initialisation globale du contexte
   globalInit();
@@ -54,10 +39,16 @@ $(window).on("load", function (){
    //hammerIt(drawspace[0]);
 
   //drawspace scale from 2 to 1
-  btn_dezoom.onclick = function(){
-    console.log('btn dezoom clicked');
-    dezoom();
-  };
+  btn_dezoom.on('click', function(){
+    var offX, offY, scale; 
+offY = $('body').scrollTop();
+    offX = $('body').scrollLeft();
+    
+    scale = 1;
+
+    console.log(offX, offY);
+    dezoom(offX, offY, scale);
+  });
   
   // $(window).resize(function() {
   //    globalInit();
@@ -121,64 +112,60 @@ $(window).on("load", function (){
   /* Gère le click simple (ajout/suppression de briques) sur le drawspace  */
   drawspace.bind("click", function(e){
     var x,y;
-    console.log("x = " + e.pageX + " - y = " + e.pageY);
+    var clickX = e.pageX;
+    var clickY = e.pageY;
+
+    //console.log("x = " + e.pageX + " - y = " + e.pageY);
     if (smartphone === 0) {
-      x=parseInt(e.pageX / bricksize);
-      y=parseInt(e.pageY / bricksize);
+      x=parseInt(clickX / bricksize);
+      y=parseInt(clickY / bricksize);
       webcom.updatePos(x,y);
     }
 
     // Ajout des briques si smartphone mode draw
     if (smartphone === 1 && scale === 2) {
-      x=parseInt(((e.pageX - drawspace.offset().left) / bricksize)/2);
-      y=parseInt(((e.pageY - drawspace.offset().top) / bricksize)/2);
+      x=parseInt(((clickX - drawspace.offset().left) / bricksize)/2);
+      y=parseInt(((clickY - drawspace.offset().top) / bricksize)/2);
       webcom.updatePos(x,y);
     }
 
     if (smartphone === 1 && scale === 1) {
-      
-      btn_dezoom.style.visibility = "visible";
-      btn_dezoom.style.display = "inline";
 
       last_scale = 1;
       scale = 2;
 
-      var offX = drawspace.offset().left*scale ;
-      var offY = drawspace.offset().top*scale ;
+      var scrollX,
+          scrollY,
+          viewpWidth = window.innerWidth/2,
+          viewpHeight = window.innerHeight/2,
+          overflowX = e.clientX - viewpWidth,
+          overflowY = e.clientY - viewpHeight;
+          offX = $('body').scrollLeft() ;
+          offY = $('body').scrollTop() ;
 
-      var iniMouseX = e.pageX/2 + offX;     // mouse position at zoom scale 1
-      var iniMouseY = e.pageY/2 + offY;
+      scrollX = clickX + overflowX + offX;     // mouse position at zoom scale 1
+      scrollY = clickY + overflowY + offY;    
 
-      var newMouseX = iniMouseX * scale;      // mouse position at new scale
-      var newMouseY = iniMouseY * scale;
-      
-      posX = iniMouseX;
-      posY = iniMouseY;
 
-      last_posX = posX;
-      last_posY = posY;
+      console.log("click X = " + clickX + " - click Y = " + clickY);
+      console.log("off X = " + offX + " - off Y = " + offY);
+      console.log("viewp X = " + e.clientX + " - viewp Y = " + e.clientY);
+      console.log(window.innerHeight +' - ' + window.innerWidth);
 
-      // max_pos_x =  drawspace.clientWidth - window.innerWidth;
-      // max_pos_y =  drawspace.clientHeight - window.innerHeight;
+      btn_dezoom.show();
 
-      transcale(posX, posY, scale);
+      transcale(scrollX, scrollY, scale);
     }
   });
  });
 
 /* Effectue une translation et un scale sur le drawspace */
 function transcale (x, y, sc) {
-
-  var transform = "";
-
-  transform = "scale(" + sc + ")";
+console.log("transcale called");
   
   $('body').scrollLeft(x);
   $('body').scrollTop(y);
-  drawspace.css('transform', transform);
-
-  console.log(x + " - " + y + " - " + sc);
-  transform = " ";
+  drawspace.css('transform', "scale(" + sc + ")");
 }
 
 
@@ -189,9 +176,9 @@ function globalInit() {
 
   /* hide dezoom button */
   if (smartphone === 0 || (smartphone == 1 && scale == 1)) {
-     btn_dezoom.style.visibility = "hidden";
-     btn_dezoom.style.display = "none";
+     btn_dezoom.hide();
   }
+
 
   /* Disable Ctrl+mouseWheel zoom on cross-browser */
   $(window).bind('mousewheel DOMMouseScroll', function (event) {
@@ -208,19 +195,15 @@ function globalInit() {
   }
 }
 
-
 /* Dezoom le drawspace à son état initial */
-function dezoom() {
-  console.log('fct dezoom triggered');
-  //transcale(0, 0, 1);
+function dezoom(x, y, sc) {
 
-  drawspace.css('transform', 'none');
+  transcale(x, y, sc);
 
   last_scale = 2;      
   scale = 1;
 
-  btn_dezoom.style.visibility = "hidden";
-  btn_dezoom.style.display = "none";
+  btn_dezoom.hide();
 }
 
 /* set the size of the drawspace's background */
@@ -229,63 +212,6 @@ function initBrickSize(size) {
 }
 
 /* ------------ Gestion du tactile ------------ */
-
-function hammerIt(pDrawspace) {
-
-  hammertime = new Hammer(pDrawspace, {});
-
-  var posX = 0,
-      posY = 0,
-      
-      max_pos_x = 0,
-      max_pos_y = 0,
-      min_pos = 0,
-      transform = "",
-      ds = pDrawspace;
-
-  // Tap to zoom
-  hammertime.on('tap', function(ev) {
-alert('lol');
-    // Ajout des briques si smartphone
-    if (scale == 2 && smartphone == 1) {
-      var x,y;
-      x=parseInt(((ev.center.x - drawspace.offset().left) / bricksize)/2);
-      y=parseInt(((ev.center.y- drawspace.offset().top) / bricksize)/2);
-      webcom.updatePos(x,y);
-    }
-
-    if (scale == 2 && smartphone == 1) {
-      
-      btn_dezoom.style.visibility = "visible";
-      btn_dezoom.style.display = "inline";
-
-      last_scale = 1;
-      scale = 2;
-
-      var offX = drawspace.offset().left*scale ;
-      var offY = drawspace.offset().top*scale ;
-
-      var iniMouseX = ev.center.x - offX;     // mouse position at zoom scale 1
-      var iniMouseY = ev.center.y - offY;
-
-      var newMouseX = iniMouseX * scale;      // mouse position at new scale
-      var newMouseY = iniMouseY * scale;
-      
-      posX = (iniMouseX - newMouseX) ;
-      posY = (iniMouseY - newMouseY) ;
-
-      last_posX = posX;
-      last_posY = posY;
-
-      max_pos_x =  ds.clientWidth - window.innerWidth;
-      max_pos_y =  ds.clientHeight - window.innerHeight;
-    }
-
-    
-    transcale(posX, posY, scale);
-  }); 
-}
-
 
 
 /* Détecte si l'application est utilisé sur mobile/tablettes ou PC */
