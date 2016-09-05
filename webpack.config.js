@@ -17,10 +17,11 @@ const config = {
 				 'hammer',
 				 'touch-punch',
 				 'foundation',
-				 'imports?exports=>false&module=>false!webcom',	 
+				 'imports?this=>window!jq-mobile',
+				 'jq-mobile-css',
+				 'imports?exports=>false&module=>false!webcom'
 		],
-		script: ['./src/script.js'
-		]
+		script: ['./src/script.js']
 	},
 	output: {
 		filename: 'bundle.js',
@@ -32,16 +33,19 @@ const config = {
         alias: {
         	jquery: 'jquery/dist/jquery.min.js',
         	'mouse' : 'jquery-ui/ui/widgets/mouse.js',
-        	'widgets' : 'jquery-ui/ui/widget.js',
-        	'draggable' : 'jquery-ui/ui/widgets/draggable.js',
-        	'touch-punch' : 'jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
         	'webcom': 'webcom/webcom.js',
         	'hammer' : 'hammerjs/hammer.min.js',
 			'font-awesome': 'font-awesome/css/font-awesome.min.css',
+			'touchswipe' : 'jquery-touchswipe/jquery.touchSwipe.min.js',
+			'jq-mobile' : 'jquery-mobile/dist/jquery.mobile.min.js',
+			'jq-mobile-css' : 'jquery-mobile/dist/jquery.mobile.min.css',
+			'widgets' : 'jquery-ui/ui/widget.js',
+        	'draggable' : 'jquery-ui/ui/widgets/draggable.js',
+        	'touch-punch' : 'jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
 			'foundation' : 'foundation-sites/dist/foundation.min.js',
-			'touchswipe' : 'jquery-touchswipe/jquery.touchSwipe.min.js'
         },
-        extensions: ["", ".webpack.js", ".web.js", ".js", ".css", ".min.css", ".scss"]
+        extensions: ["", ".webpack.js", ".web.js", ".js", ".css", ".min.css", ".scss"],
+        modulesDirectories: ["node_modules"]
     },
 	module: {
 		loaders: [
@@ -51,7 +55,7 @@ const config = {
         		loaders: ["style", "css", "sass"]
       		},
 			{ 
-			  	test: /\.(eot|woff|woff2|ttf|svg|)(\?\S*)?$/,
+			  	test: /\.(eot|gif|woff|woff2|ttf|svg|)(\?\S*)?$/,
 			  	loader: 'url?limit=100000&name=[name].[ext]'
 			}	
 		],
