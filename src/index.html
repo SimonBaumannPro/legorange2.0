@@ -2,101 +2,80 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+    <!-- content width viewport set to 5000px for enable scroll-x -->
+    <meta name="viewport" content="width=5000, height=device-height, initial-scale=1, user-scalable=no"> 
     <title>Add your brick !</title>
   </head>
   <body>
-    <div class="top-bar fixed" style="backgroud-color:blue"; "z-index:8">
-      <div class="top-bar-left">
+    <div class="top-bar topbar">
+      <div class="top-bar-title">
         <a href="#">
           <img src="" class="logo_webcom">
           <span class="logo_txt">
-              <span style="color:#F60;">W</span><span style="color:white">ebcom</span>
+            <span style="color:#F60;">W</span><span style="color:white">ebcom</span>
           </span>
         </a>
       </div>
+      <a href="#overlayPanel" id="btn_panel" class="menu-icon"></a>
     </div>
-    <!-- Off canvas -->
-    <div class="off-canvas-wrapper" data-offcanvas>
-      <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
-        <div class="off-canvas position-right" id="offCanvasRight" data-off-canvas data-position="right">
-          <!-- Menu -->
-          <ul class="vertical menu" data-accordion-menu>
-            <li>
-              <a id="menu-DT" class="menu-title" href="#">DRAW TOOLS</a>
-              <ul class="ul-drawTools">
-                <div class="container">
-                  <div class="drawTools-buttons-container">
-                    <span id="draw"  class="fa-stack fa-lg button fa-2x tools-button">
-                      <i class="fa fa-square fa-stack-2x whiteSquare"></i>
-                      <i class="fa fa-pencil fa-stack-1x tools-icons"></i>
-                    </span>
-                    <span id="erase" class="fa-stack fa-lg button fa-2x tools-button">
-                      <i class="fa fa-square-o fa-stack-2x whiteSquare"></i>
-                      <i class="fa fa-eraser fa-stack-1x tools-icons"></i>
-                    </span>
-                    <span id="eraseAll" class="fa-stack fa-lg button fa-2x tools-button">
-                      <i class="fa fa-square fa-stack-2x whiteSquare" style="color:#800000!important"></i>
-                      <i class="fa fa-trash fa-stack-1x tools-icons"></i>
-                    </span>
-                  </div>
-                  <div class="container-color">
-                    <div class="colors">
-                      <span class="brickMenu white active"></span>
-                      <span class="brickMenu green"></span>
-                      <span class="brickMenu red"></span>
-                      <span class="brickMenu black"></span>
-                      <span class="brickMenu blue"></span/>
-                      <span class="brickMenu yellow"></span>
-                    </div>
-                  </div> 
-                </div>
-              </ul>
-            </li>
-            <li>
-              <a class="menu-title" href="#">SOCIAL</a>
-              <ul style="height:100px">
-                <li class="menu-submenu">
-                  <a class="title"href="#">Chat</a>
-                </li>
-                <li class="menu-submenu">
-                  <a class="title" href="#">Users</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a class="menu-title" href="#">WEBCOM</a>
-              <ul class="text-color: rgb(33, 153, 232)">
-                <li><a target="_blank" style="font-size: 16px; text-align: center; color: #FF4500" href = "http://webcom.forge.orange-labs.fr">Learn more about Webcom</a></li>
-              </ul>
-            </li>
-              <!--<div style="background-color:white; height:1000px; width:100%;"></div>-->   
-          </ul>
-        </div> 
-        <div class="off-canvas-content">
-          <!-- Barre des menus -->
-<!--           <div class="title-bar fixed">
-            <div class="container-titlebar title-bar-left" style="pointer-events:auto">
-              <a href="#">
-                <img src="" class="logo_webcom">
-                <span class="logo_txt">
-                    <span style="color:#F60;">W</span><span style="color:white">ebcom</span>
-                  </span>
-                </a>
-            </div>
-              <div class="title-bar-right container-titlebar-menu" style="pointer-events:auto">
-                <button id="buttonToggle" class="menu-icon" type="button" data-toggle="offCanvasRight"></button>
+    <div id="overlayPanel" data-role="panel" data-dismissible="true" data-display="overlay" data-position-fixed="true" data-position="right">
+      <ul class="vertical menu" data-accordion-menu>
+        <li>
+          <a id="menu-DT" class="menu-title" href="#">DRAW TOOLS</a>
+          <ul class="ul-drawTools">
+            <div class="container">
+              <div class="drawTools-buttons-container">
+                <span id="draw"  class="fa-stack fa-lg button fa-2x tools-button">
+                  <i class="fa fa-square fa-stack-2x whiteSquare"></i>
+                  <i class="fa fa-pencil fa-stack-1x tools-icons"></i>
+                </span>
+                <span id="erase" class="fa-stack fa-lg button fa-2x tools-button">
+                  <i class="fa fa-square-o fa-stack-2x whiteSquare"></i>
+                  <i class="fa fa-eraser fa-stack-1x tools-icons"></i>
+                </span>
+                <span id="eraseAll" class="fa-stack fa-lg button fa-2x tools-button">
+                  <i class="fa fa-square fa-stack-2x whiteSquare" style="color:#800000!important"></i>
+                  <i class="fa fa-trash fa-stack-1x tools-icons"></i>
+                </span>
               </div>
-          </div>   -->
-          <!-- main content goes here -->
-          
-        </div>
+              <div class="container-color">
+                <div class="colors">
+                  <span class="brickMenu white active"></span>
+                  <span class="brickMenu green"></span>
+                  <span class="brickMenu red"></span>
+                  <span class="brickMenu black"></span>
+                  <span class="brickMenu blue"></span/>
+                  <span class="brickMenu yellow"></span>
+                </div>
+              </div> 
+            </div>
+          </ul>
+        </li>
+        <li>
+          <a class="menu-title" href="#">SOCIAL</a>
+          <ul style="height:100px">
+            <li class="menu-submenu">
+              <a class="title"href="#">Chat</a>
+            </li>
+            <li class="menu-submenu">
+              <a class="title" href="#">Users</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a class="menu-title" href="#">WEBCOM</a>
+          <ul class="text-color: rgb(33, 153, 232)">
+            <li><a target="_blank" style="font-size: 16px; text-align: center; color: #FF4500" href = "http://webcom.forge.orange-labs.fr">Learn more about Webcom</a></li>
+          </ul>
+        </li>
+          <!--<div style="background-color:white; height:1000px; width:100%;"></div>-->   
+      </ul>
+    </div>
+    <div data-role="main">
+      <div class="drawspace" style="-moz-user-select: none;" unselectable="on" ></div>  
+      <div class="zoomspace">
+        <button id="btn_dezoom" type="button" class="dezoom button">-</button> 
       </div>
     </div>
-      <div class="drawspace" stylde="-moz-user-select: none;" unselectable="on" off-canvas-content>
-      </div>
-      <div class="zoomspace">
-            <a href="#" type="button" class="dezoom">DeZoom</a> 
-      </div>
   </body>
 </html>

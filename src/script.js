@@ -1,6 +1,5 @@
-
-
-// https://io.datasync.orange.com/samples/legorange/
+/*                ORIGINAL WebApp
+ https://io.datasync.orange.com/samples/legorange/ */
 
 
 require('./assets/styles/app.scss');
@@ -11,9 +10,11 @@ var webcom = require('./assets/js/webcom_fct.js');
 
 
 var drawspace = $(".drawspace"),
-    btn_dezoom = $(".dezoom"),
-    offCanvas = $("#offCanvasRight"),
+    btn_dezoom = $("#btn_dezoom"),
     eraseAll = $("#eraseAll"),
+    btn_panel = $('#btn_panel'),
+    panel = $('#overlayPanel'),
+    topHeight,
     last_move="",
     smartphone,
     last_scale,
@@ -22,6 +23,7 @@ var drawspace = $(".drawspace"),
     last_posY = 0;
 
 var bricksize = webcom.bricksize;
+var mode = webcom.mode;
 
 $(window).on('beforeunload', function(){
   $(window).scrollTop(0);
@@ -35,13 +37,11 @@ $(window).on("load", function (){
   // Initialisation globale du contexte
   globalInit();
 
-  // Gestion des évenements tactiles (pan & zoom)
-   //hammerIt(drawspace[0]);
-
   //drawspace scale from 2 to 1
   btn_dezoom.on('click', function(){
     var offX, offY, scale; 
-offY = $('body').scrollTop();
+
+    offY = $('body').scrollTop();
     offX = $('body').scrollLeft();
     
     scale = 1;
@@ -67,7 +67,8 @@ offY = $('body').scrollTop();
   //     },
   //     swipeLeft:function(event, direction, distance, duration, fingerCount) {
   //       if (fingerCount == 1 && duration < 250) {
-  //         offCanvas.foundation("open", offCanvas);
+  //         console.log("swipeLeft");
+  //         panel.open();
   //       }        
   //     },
   //     swipeRight:function(event, direction, distance, duration, fingerCount) {
@@ -75,13 +76,13 @@ offY = $('body').scrollTop();
   //         offCanvas.foundation('close');
   //       }
   //     },
-  //     fingers:$.fn.swipe.fingers.ALL  
+  //     fingers:$.fn.swipe.fingers.ALL
   //   });
   // });
 
   /* Supprime toutes les briques du drawspace */
   eraseAll.click(function() {
-    eraseAll();
+    webcom.eraseAll();
   });
 
   drawspace.on('mousedown', function(e){
@@ -92,8 +93,9 @@ offY = $('body').scrollTop();
         mousemove : function(e){
           e.preventDefault();
           x=parseInt(e.pageX / bricksize);
-          y=parseInt(e.pageY / bricksize);
-          var new_move=x+"-"+y;
+          y=parseInt((e.pageY - topHeight) / bricksize);
+
+          var new_move = x + "-" + y;
 
           // Disable brick overflow outside drawspace
           if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < drawspace.height() && e.pageX > 0 && e.pageY > 0) {
@@ -113,75 +115,81 @@ offY = $('body').scrollTop();
   drawspace.bind("click", function(e){
     var x,y;
     var clickX = e.pageX;
-    var clickY = e.pageY;
+    var clickY = e.pageY; // we remove the top-bar height
 
-    //console.log("x = " + e.pageX + " - y = " + e.pageY);
+    // (if no mobile device)
     if (smartphone === 0) {
       x=parseInt(clickX / bricksize);
-      y=parseInt(clickY / bricksize);
+      y=parseInt((clickY - topHeight) / bricksize);
       webcom.updatePos(x,y);
-    }
+    } else { // (mobile device)
 
-    // Ajout des briques si smartphone mode draw
-    if (smartphone === 1 && scale === 2) {
-      x=parseInt(((clickX - drawspace.offset().left) / bricksize)/2);
-      y=parseInt(((clickY - drawspace.offset().top) / bricksize)/2);
-      webcom.updatePos(x,y);
-    }
+      // Add brick if draw mode
+      if (scale === 2) {
+        x=parseInt(((clickX - drawspace.offset().left) / bricksize)/2);
+        y=parseInt(((clickY - drawspace.offset().top) / bricksize)/2);
+        webcom.updatePos(x,y);
+      }
 
-    if (smartphone === 1 && scale === 1) {
+      if (scale === 1) {
 
-      last_scale = 1;
-      scale = 2;
+        last_scale = 1;
+        scale = 2;
 
-      var scrollX,
-          scrollY,
-          viewpWidth = window.innerWidth/2,
-          viewpHeight = window.innerHeight/2,
-          overflowX = e.clientX - viewpWidth,
-          overflowY = e.clientY - viewpHeight;
-          offX = $('body').scrollLeft() ;
-          offY = $('body').scrollTop() ;
+        var scrollX,
+            scrollY,
+            viewpWidth = window.innerWidth/2,
+            viewpHeight = window.innerHeight/2,
+            overflowX = e.clientX - viewpWidth,
+            overflowY = e.clientY - viewpHeight;
+            offX = $('body').scrollLeft() ;
+            offY = $('body').scrollTop() ;
 
-      scrollX = clickX + overflowX + offX;     // mouse position at zoom scale 1
-      scrollY = clickY + overflowY + offY;    
+        scrollX = clickX + overflowX + offX;     // mouse position at zoom scale 1
+        scrollY = clickY + overflowY + offY;    
 
+        btn_dezoom.show();
 
-      console.log("click X = " + clickX + " - click Y = " + clickY);
-      console.log("off X = " + offX + " - off Y = " + offY);
-      console.log("viewp X = " + e.clientX + " - viewp Y = " + e.clientY);
-      console.log(window.innerHeight +' - ' + window.innerWidth);
-
-      btn_dezoom.show();
-
-      transcale(scrollX, scrollY, scale);
+        transcale(scrollX, scrollY, scale);
+      }
     }
   });
  });
 
 /* Effectue une translation et un scale sur le drawspace */
 function transcale (x, y, sc) {
-console.log("transcale called");
-  
   $('body').scrollLeft(x);
   $('body').scrollTop(y);
+  //drawspace.css('margin-top', topHeight);
   drawspace.css('transform', "scale(" + sc + ")");
 }
 
-
+/* Initialisation du contexte global (interface) */
 function globalInit() {
 
-  var topHeight = $('.top-bar').css('height');
+  topHeight = $('.topbar').outerHeight();
+  var panel = $('[data-role=panel]').height();
+  var panelheight = topHeight - panel;
+  var panelwidth = '350px';
+
+  $('.ui-panel').css({
+    'top': topHeight,
+    'min-height': panelheight,
+    'width': panelwidth,
+    'background' : 'black',
+    'text-shadow' : '0 0 0'
+});
+
+  $("div").removeClass('ui-panel-dismiss');
+  $('a').removeClass('ui-link');
+
+  btn_dezoom.removeClass().addClass('dezoom button');
 
   // = 1 si mobile, 0 sinon
   smartphone = detectDevice();
 
-  /* hide dezoom button */
-  if (smartphone === 0 || (smartphone == 1 && scale == 1)) {
-     btn_dezoom.hide();
-     drawspace.css('margin-top', topHeight);
-  }
-
+  btn_dezoom.hide();
+  drawspace.css('margin-top', topHeight);
 
   /* Disable Ctrl+mouseWheel zoom on cross-browser */
   $(window).bind('mousewheel DOMMouseScroll', function (event) {
@@ -192,10 +200,6 @@ function globalInit() {
 
   // Initialisation of the drawspace's brick size
   initBrickSize(bricksize+"px");
-
-  if ($('body').height > $("body").height) {
-    //TODO : remove the white space outside the drawspace
-  }
 }
 
 /* Dezoom le drawspace à son état initial */
@@ -219,16 +223,15 @@ function initBrickSize(size) {
 
 /* Détecte si l'application est utilisé sur mobile/tablettes ou PC */
 function detectDevice() {
-  if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+  if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent.toLowerCase()) ) {
     $('body').css('position', 'absolute');
     //offCanvas.addClass('reveal-for-large');
-    //$('.container-titlebar-menu').css('display', 'none');
+    btn_panel.hide();
     return 0;
   } else {
     return 1;
   }
 }
-
 
 /* ------------ Gestion de l'affichage de l'off-canvas ------------ */
 
