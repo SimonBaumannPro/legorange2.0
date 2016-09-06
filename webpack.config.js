@@ -9,13 +9,12 @@ const config = {
 	entry: {
 		vendor: [
 				 'imports?exports=>false&module=>false!jquery',
-				 'font-awesome',
-				 'touchswipe',
 				 'mouse',
 				 'widgets',
 				 'draggable',
-				 'hammer',
 				 'touch-punch',
+				 'font-awesome',
+				 'touchswipe',
 				 'foundation',
 				 'imports?this=>window!jq-mobile',
 				 'jq-mobile-css',
@@ -32,17 +31,16 @@ const config = {
     	root: __dirname,
         alias: {
         	jquery: 'jquery/dist/jquery.min.js',
+        	'draggable' : 'jquery-ui/ui/widgets/draggable.js',
+        	'widgets' : 'jquery-ui/ui/widget.js',
         	'mouse' : 'jquery-ui/ui/widgets/mouse.js',
-        	'webcom': 'webcom/webcom.js',
-        	'hammer' : 'hammerjs/hammer.min.js',
-			'font-awesome': 'font-awesome/css/font-awesome.min.css',
-			'touchswipe' : 'jquery-touchswipe/jquery.touchSwipe.min.js',
+        	'touch-punch' : 'jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
+        	'touchswipe' : 'jquery-touchswipe/jquery.touchSwipe.min.js',
 			'jq-mobile' : 'jquery-mobile/dist/jquery.mobile.min.js',
 			'jq-mobile-css' : 'jquery-mobile/dist/jquery.mobile.min.css',
-			'widgets' : 'jquery-ui/ui/widget.js',
-        	'draggable' : 'jquery-ui/ui/widgets/draggable.js',
-        	'touch-punch' : 'jquery-ui-touch-punch/jquery.ui.touch-punch.min.js',
-			'foundation' : 'foundation-sites/dist/foundation.min.js',
+        	'webcom': 'webcom/webcom.js',
+			'font-awesome': 'font-awesome/css/font-awesome.min.css',
+			'foundation' : 'foundation-sites/dist/foundation.min.js'
         },
         extensions: ["", ".webpack.js", ".web.js", ".js", ".css", ".min.css", ".scss"],
         modulesDirectories: ["node_modules"]
@@ -94,7 +92,7 @@ if (process.env.NODE_ENV !== 'production') {
 	]);
 	config.module.loaders = config.module.loaders.concat([
 		{ test: /\.less$/, loader: 'style-loader!css-loader?sourceMap!less-loader?sourceMap'},
-		{ test: /\.css$/,  loader: 'style-loader!css-loader?sourceMap' },
+		{ test: /\.css$/,  loader: 'style-loader!css-loader?sourceMap' }
 	]);
 	config.devtool = 'eval-cheap-module-source-map';
 	config.debug = true;
