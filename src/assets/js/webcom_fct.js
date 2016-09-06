@@ -1,12 +1,13 @@
 
 /* All these functions are based on webcom.js */
 
+var main = require('../../script.js');
 
 var webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__,
     legobase = new Webcom(webcom_url),
     bricks={},
     bricksize = 15, //parseInt($(document).width()/100),
-    color="white",
+    color= "white",
     mode="draw",
     noAuth=true,
     authData ="",
@@ -14,9 +15,9 @@ var webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__,
 
     module.exports.bricksize = bricksize;
 
-function eraseAll() {
+module.exports.eraseAll = function() {
 	legobase.child(domain).remove();
-}
+};
 
 // Callback sur changement d'une brique. Dans notre cas c'est juste la couleur qui change
 legobase.child(domain).on('child_changed', function(snapshot) {
@@ -61,10 +62,11 @@ module.exports.updatePos = function(x, y) {
 
   // On regarde si on a déjà une valeur pour cette positon
   brick.once("value", function(currentData) {
-
+  	color = main.color;
     if (currentData.val() === null) {
       // il n'y avait pas encore de brique on l'ajoute avec la couleur actuellement sélectionné
       if (mode=="draw" || mode=="eraseAll") 
+      	console.log(color);
         brick.set({color: color, x: x, y: y, uid: authData.uid});
     } else {
       // il y a déjà une brique à cet emplacement. 

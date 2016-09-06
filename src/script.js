@@ -7,7 +7,7 @@ require('./assets/styles/style.css');
 //require('./assets/js/webcom_fct.js');
 
 var webcom = require('./assets/js/webcom_fct.js');
-
+    module.exports.color = "white";
 
 var drawspace = $(".drawspace"),
     btn_dezoom = $("#btn_dezoom"),
@@ -170,7 +170,7 @@ function globalInit() {
   topHeight = $('.topbar').outerHeight();
   var panel = $('[data-role=panel]').height();
   var panelheight = topHeight - panel;
-  var panelwidth = '350px';
+  var panelwidth = '330px';
 
   $('.ui-panel').css({
     'top': topHeight,
@@ -178,7 +178,8 @@ function globalInit() {
     'width': panelwidth,
     'background' : 'black',
     'text-shadow' : '0 0 0'
-});
+  });
+
 
   $("div").removeClass('ui-panel-dismiss');
   $('a').removeClass('ui-link');
@@ -239,7 +240,8 @@ function detectDevice() {
 $(".colors .brickMenu").click(function(e) {
   $(".colors .brickMenu").removeClass("active");
   $(this).addClass("active");
-  color=$(this).attr('class').replace(/\s*(brick|active)\s*/g, '');
+  color=$(this).attr('class').replace(/\s*(brickMenu|active)\s*/g, '');
+  module.exports.color = color;
 });
 
 /* empèche l'affichage des couleurs lors du déroulement de la liste si on est en mode "erase" */
