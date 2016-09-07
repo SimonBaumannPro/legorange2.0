@@ -6,14 +6,17 @@ require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
 //require('./assets/js/webcom_fct.js');
 
-var webcom = require('./assets/js/webcom_fct.js');
-    module.exports.color = "white";
+var webcom = require('./assets/js/webcom_fct.js'),
+    init   = require('./assets/js/init.js'),
+    ev     = require('./assets/js/events.js');
+    
 
 var drawspace = $(".drawspace"),
     btn_dezoom = $("#btn_dezoom"),
     eraseAll = $("#eraseAll"),
     btn_panel = $('#btn_panel'),
     panel = $('#overlayPanel'),
+    mode = "draw",
     topHeight,
     last_move="",
     smartphone,
@@ -22,8 +25,10 @@ var drawspace = $(".drawspace"),
     last_posX = 0,
     last_posY = 0;
 
+module.exports.mode = mode;
+
 var bricksize = webcom.bricksize;
-var mode = webcom.mode;
+//var mode = webcom.mode;
 
 $(window).on('beforeunload', function(){
   $(window).scrollTop(0);
@@ -180,14 +185,13 @@ function globalInit() {
     'text-shadow' : '0 0 0'
   });
 
-
   $("div").removeClass('ui-panel-dismiss');
   $('a').removeClass('ui-link');
 
   btn_dezoom.removeClass().addClass('dezoom button');
 
   // = 1 si mobile, 0 sinon
-  smartphone = detectDevice();
+  smartphone = init.detectDevice();
 
   btn_dezoom.hide();
   drawspace.css('margin-top', topHeight);
@@ -221,57 +225,14 @@ function initBrickSize(size) {
 
 /* ------------ Gestion du tactile ------------ */
 
-
-/* Détecte si l'application est utilisé sur mobile/tablettes ou PC */
-function detectDevice() {
-  if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent.toLowerCase()) ) {
-    $('body').css('position', 'absolute');
-    //offCanvas.addClass('reveal-for-large');
-    btn_panel.hide();
-    return 0;
-  } else {
-    return 1;
-  }
-}
-
-/* ------------ Gestion de l'affichage de l'off-canvas ------------ */
-
 /* gère la surbrillance d'une couleur active */
-$(".colors .brickMenu").click(function(e) {
-  $(".colors .brickMenu").removeClass("active");
-  $(this).addClass("active");
-  color=$(this).attr('class').replace(/\s*(brickMenu|active)\s*/g, '');
-  module.exports.color = color;
+$(".brickMenu").click(function() {
+  ev.color_active($(this));
 });
 
 /* empèche l'affichage des couleurs lors du déroulement de la liste si on est en mode "erase" */
-$("#menu-DT").click(function() {
-  if (mode == "erase") {
-    $(".ul-drawTools").attr("style", "height: 100px");
-    $(".drawTools-buttons-container").css("height", "100%");
-    $(".color-list").hide();
-  }
-});
+$("#menu-DT").click(ev.hide_colors());
 
-$(".button").click(function(e){
-  change_mode($(this).attr("id"));
+$(".mode").click(function(e){
+  module.exports.mode = ev.change_mode($(this).attr("id"));
 });
-
-/* Manage the display mode in the off-canvas menue */
-function change_mode(new_mode) {
-  mode=new_mode;
-  if (mode=="draw" || mode=="eraseAll") {
-    $(".ul-drawTools").attr("style", "height: 200px");
-    $(".drawTools-buttons-container").css("height", "50%");
-    $("#erase"+" :nth-child(1)").removeClass("fa-square").addClass("fa-square-o");
-    $("#draw"+" :nth-child(1)").removeClass("fa-square-o").addClass("fa-square");
-    $(".color-container").show();
-  }
-  else {
-    $(".ul-drawTools").attr("style", "height: 100px");
-    $(".drawTools-buttons-container").css("height", "100%");
-    $("#erase"+" :nth-child(1)").removeClass("fa-square-o").addClass("fa-square");
-    $("#draw"+" :nth-child(1)").removeClass("fa-square").addClass("fa-square-o");
-    $(".color-list").hide();      
-  }
-}

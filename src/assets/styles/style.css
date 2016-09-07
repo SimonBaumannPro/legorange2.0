@@ -54,9 +54,9 @@ html,body {
 }
 
 .dezoom {
-    font-size:40px;
+    font-size:40px !important;
     color:white;
-    line-height: 40px;
+    line-height: 40px !important;
     padding-bottom: 14px;
 }
 
@@ -175,9 +175,9 @@ hr{
 .menu-icon {
     vertical-align: middle;
     width:25px;
-    float: right;
+    float: right !important;
     z-index: 8;
-    position: fixed;
+    position: fixed !important;
     top:15px;
     right: 15px;
 }
@@ -206,7 +206,7 @@ hr{
 .tools-button {
     margin-top:18px !important;  
     margin-bottom:18px !important; 
-    margin-left:35px !important;
+    margin-left:28px !important;
     width: 4.2em;
     height: 4.2em;
     position: relative;

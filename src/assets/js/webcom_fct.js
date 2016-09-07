@@ -2,13 +2,13 @@
 /* All these functions are based on webcom.js */
 
 var main = require('../../script.js');
+var ev = require('./events.js');
 
 var webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__,
     legobase = new Webcom(webcom_url),
     bricks={},
     bricksize = 15, //parseInt($(document).width()/100),
-    color= "white",
-    mode="draw",
+    mode = main.mode,
     noAuth=true,
     authData ="",
     domain="brick";
@@ -62,11 +62,12 @@ module.exports.updatePos = function(x, y) {
 
   // On regarde si on a déjà une valeur pour cette positon
   brick.once("value", function(currentData) {
-  	color = main.color;
+  	color = ev.color;
+  	mode = main.mode;
+  	console.log(mode);
     if (currentData.val() === null) {
       // il n'y avait pas encore de brique on l'ajoute avec la couleur actuellement sélectionné
       if (mode=="draw" || mode=="eraseAll") 
-      	console.log(color);
         brick.set({color: color, x: x, y: y, uid: authData.uid});
     } else {
       // il y a déjà une brique à cet emplacement. 
