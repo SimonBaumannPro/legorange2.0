@@ -64,7 +64,6 @@ module.exports.updatePos = function(x, y) {
   brick.once("value", function(currentData) {
   	color = ev.color;
   	mode = main.mode;
-  	console.log(mode);
     if (currentData.val() === null) {
       // il n'y avait pas encore de brique on l'ajoute avec la couleur actuellement sélectionné
       if (mode=="draw" || mode=="eraseAll") 

@@ -42,7 +42,6 @@ module.exports.hide_colors = function() {
 };
 
 module.exports.color_active = function(elem) {
-	console.log('colorActive');
 	$(".brickMenu").removeClass("active");
 	elem.addClass("active");
 	color = elem.attr('class').replace(/\s*(brickMenu|active)\s*/g, '');

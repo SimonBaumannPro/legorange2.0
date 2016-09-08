@@ -49,9 +49,8 @@ $(window).on("load", function (){
     offY = $('body').scrollTop();
     offX = $('body').scrollLeft();
     
-    scale = 1;
+    scale = 0.5;
 
-    console.log(offX, offY);
     dezoom(offX, offY, scale);
   });
   
@@ -129,33 +128,39 @@ $(window).on("load", function (){
       webcom.updatePos(x,y);
     } else { // (mobile device)
 
-      // Add brick if draw mode
-      if (scale === 2) {
-        x=parseInt(((clickX - drawspace.offset().left) / bricksize)/2);
-        y=parseInt(((clickY - drawspace.offset().top) / bricksize)/2);
-        webcom.updatePos(x,y);
-      }
+      if (panel.hasClass('ui-panel-open') === true) {
+        e.preventDefault();
+        panel.panel("close");
+      } else {
 
-      if (scale === 1) {
+        // Add brick if draw mode
+        if (scale === 2) {
+          x=parseInt(((clickX - drawspace.offset().left) / bricksize)/2);
+          y=parseInt(((clickY - drawspace.offset().top) / bricksize)/2);
+          webcom.updatePos(x,y);
+        }
 
-        last_scale = 1;
-        scale = 2;
+        if (scale === 1) {
 
-        var scrollX,
-            scrollY,
-            viewpWidth = window.innerWidth/2,
-            viewpHeight = window.innerHeight/2,
-            overflowX = e.clientX - viewpWidth,
-            overflowY = e.clientY - viewpHeight;
-            offX = $('body').scrollLeft() ;
-            offY = $('body').scrollTop() ;
+          last_scale = 1;
+          scale = 2;
 
-        scrollX = clickX + overflowX + offX;     // mouse position at zoom scale 1
-        scrollY = clickY + overflowY + offY;    
+          var scrollX,
+              scrollY,
+              viewpWidth = window.innerWidth/2,
+              viewpHeight = window.innerHeight/2,
+              overflowX = e.clientX - viewpWidth,
+              overflowY = e.clientY - viewpHeight;
+              offX = $('body').scrollLeft() ;
+              offY = $('body').scrollTop() ;
 
-        btn_dezoom.show();
+          scrollX = clickX + overflowX + offX;     // mouse position at zoom scale 1
+          scrollY = clickY + overflowY + offY;    
 
-        transcale(scrollX, scrollY, scale);
+          btn_dezoom.show();
+
+          transcale(scrollX, scrollY, scale);
+        }
       }
     }
   });
@@ -167,6 +172,15 @@ function transcale (x, y, sc) {
   $('body').scrollTop(y);
   //drawspace.css('margin-top', topHeight);
   drawspace.css('transform', "scale(" + sc + ")");
+  if (sc === 0.5) {
+    $('div[data-role="main"]').height(2500);
+    $('div[data-role="main"]').width(2500);
+    document.querySelector('meta[name=viewport]').setAttribute('content', "width=2500, height=device-height, initial-scale=1, user-scalable=no");
+  } else {
+    $('div[data-role="main"]').height(5000);
+    $('div[data-role="main"]').width(5000);
+    document.querySelector('meta[name=viewport]').setAttribute('content', "width=5000, height=device-height, initial-scale=1, user-scalable=no");
+  }
 }
 
 /* Initialisation du contexte global (interface) */
@@ -205,6 +219,9 @@ function globalInit() {
 
   // Initialisation of the drawspace's brick size
   initBrickSize(bricksize+"px");
+
+
+  transcale(0, 0, 0.5);
 }
 
 /* Dezoom le drawspace à son état initial */
