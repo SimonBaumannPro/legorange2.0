@@ -16,7 +16,16 @@ var webcom_url=__WEBCOM_SERVER__+"/base/"+__NAMESPACE__,
     module.exports.bricksize = bricksize;
 
 module.exports.eraseAll = function() {
-	legobase.child(domain).remove();
+	$.confirm({
+    	icon: 'fa fa-warning',
+    	title: 'Attention !',
+    	content : 'voulez vous supprimer toutes les briques ?',
+    	confirmButton: 'Oui',
+    	cancelButton: 'Non',
+    	confirm: function () {
+    		legobase.child(domain).remove();
+    	},
+	});
 };
 
 // Callback sur changement d'une brique. Dans notre cas c'est juste la couleur qui change

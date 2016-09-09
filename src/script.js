@@ -4,7 +4,6 @@
 
 require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
-//require('./assets/js/webcom_fct.js');
 
 var webcom = require('./assets/js/webcom_fct.js'),
     init   = require('./assets/js/init.js'),
@@ -89,6 +88,9 @@ $(window).on("load", function (){
     webcom.eraseAll();
   });
 
+
+  
+
   drawspace.on('mousedown', function(e){
     if (smartphone === 0) {
       e.preventDefault();
@@ -110,9 +112,9 @@ $(window).on("load", function (){
         mouseup : function(e){
           $(this).off(handlers);   
         }
-    };
-    $(document).on(handlers);
-  }
+      };
+      $(document).on(handlers);
+    }
   });
 
   /* Gère le click simple (ajout/suppression de briques) sur le drawspace  */
@@ -131,6 +133,7 @@ $(window).on("load", function (){
       if (panel.hasClass('ui-panel-open') === true) {
         e.preventDefault();
         panel.panel("close");
+        $('html').removeClass('hideOverflow').addClass('showOverflow');
       } else {
 
         // Add brick if draw mode
@@ -240,7 +243,11 @@ function initBrickSize(size) {
   drawspace.css('background-size', size + " " + size);
 }
 
-/* ------------ Gestion du tactile ------------ */
+
+/* Désactive le scroll quand le panel est ouvert */
+btn_panel.click(function() {
+  ev.disableScroll(scale);
+});
 
 /* gère la surbrillance d'une couleur active */
 $(".brickMenu").click(function() {
@@ -249,6 +256,10 @@ $(".brickMenu").click(function() {
 
 /* empèche l'affichage des couleurs lors du déroulement de la liste si on est en mode "erase" */
 $("#menu-DT").click(ev.hide_colors());
+
+$('.menu-title').click(function() {
+  $('#menu-DT').css('color','#ff7900');
+});
 
 $(".mode").click(function(e){
   module.exports.mode = ev.change_mode($(this).attr("id"));

@@ -1,9 +1,15 @@
+@font-face {
+    font-family: HelvNeue75;
+    src: url(../fonts/HelvNeue75_W1G.woff2);
+}
+
+
 html,body {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
-    overflow: auto !important;    
+    overflow: auto;    
 }
 
 .ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper {
@@ -11,7 +17,7 @@ html,body {
 }
 
 .ui-mobile .ui-page-active {
-    overflow: auto !important;
+    overflow: auto;
 }
 
 .topbar {
@@ -19,6 +25,15 @@ html,body {
     width:100vw;
     top:0;
     z-index:2;
+    border-bottom: 0.5px solid;
+}
+
+.hideOverflow {
+    overflow : hidden !important;
+}
+
+.showOverflow {
+    overflow: auto !important;
 }
 
 .drawspace {
@@ -54,11 +69,15 @@ html,body {
 }
 
 .dezoom {
-    font-size:40px !important;
+    font-size:48px !important;
     color:white;
-    line-height: 40px !important;
     padding-bottom: 14px;
+    width: 65px !important;
+    height: 65px !important;
+    border-radius: 50%;
+    line-height: 0 !important;
 }
+
 
 .logo_webcom {
     width: 30px;
@@ -68,8 +87,8 @@ html,body {
 }
 
 .logo_txt {
-    font-family: HelvNeue35,Helvetica,Arial,sans-serif;
-    font-size: 1.2rem;
+    font-family: HelvNeue75;
+    font-size: 20px;
     vertical-align: middle;
     display: inline-block!important;
 }
@@ -141,7 +160,7 @@ hr{
 }
 
 .colors .active {
-    outline: 5px solid black;
+    outline: 3px solid white;
 }
 
 .ul-drawTools {
@@ -183,34 +202,33 @@ hr{
 }
 
 .drawTools-buttons-container {
-    background-color:grey;
-    height:50%
+    background-color: black;
+    height: 50%
 }
 
 .container-color {
-    background-color:grey;
-    height:50%;
-    display:flex;
+    background-color: black;
+    height: 50%;
+    display: flex;
 }
 
 .container {
     padding-top: -10px;
     width: auto;
-    height:100%;
+    height: 100%;
     display: block;
     overflow:hidden;
     position: relative;
-    background-color: blue;
 }
 
 .tools-button {
-    margin-top:18px !important;  
-    margin-bottom:18px !important; 
-    margin-left:28px !important;
+    margin-top: 18px !important;  
+    margin-bottom: 18px !important; 
+    margin-left: 28px !important;
     width: 4.2em;
     height: 4.2em;
     position: relative;
-    background-color:transparent !important;
+    background-color: transparent !important;
 }
 
 .tools-button:hover {
@@ -227,23 +245,32 @@ hr{
 .whiteSquare {
     top: 0;
     font-size: 4em;
+    color: #ff7900;
 }
 
 .menu-title {
     height: 77.778px;
-    font-size:35px;
-    text-align:center;
-    padding-top:20px!important;
-    outline:0;
+    font-size: 28px;
+    text-align: center;
+    padding-top: 20px!important;
+    outline: 0;
+    font-family: HelvNeue75 !important; 
+    color: #fff !important;
+    letter-spacing: -.01em !important;
+    border-bottom: 1px solid white;
 }
 
 .menu-submenu {
     height: 40px;
-    padding-top:10px;
-    vertical-align:middle;
+    padding-top: 10px;
+    vertical-align: middle;
 }
 
 .submenu .title {
     font-size: 20px;
     color:gray;   
+}
+
+.is-accordion-submenu-parent > a::after {
+    border-color: white transparent transparent !important;
 }
