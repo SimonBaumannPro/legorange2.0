@@ -18,6 +18,8 @@ const config = {
 				 'foundation',
 				 'imports?this=>window!jq-mobile',
 				 'jq-mobile-css',
+				 'jq-confirm',
+				 'jq-confirm-css',
 				 'imports?exports=>false&module=>false!webcom'
 		],
 		script: ['./src/script.js']
@@ -38,6 +40,8 @@ const config = {
         	'touchswipe' : 'jquery-touchswipe/jquery.touchSwipe.min.js',
 			'jq-mobile' : 'jquery-mobile/dist/jquery.mobile.min.js',
 			'jq-mobile-css' : 'jquery-mobile/dist/jquery.mobile.min.css',
+			'jq-confirm' : 'jquery-confirm/dist/jquery-confirm.min.js',
+			'jq-confirm-css' : 'jquery-confirm/dist/jquery-confirm.min.css',
         	'webcom': 'webcom/webcom.js',
 			'font-awesome': 'font-awesome/css/font-awesome.min.css',
 			'foundation' : 'foundation-sites/dist/foundation.min.js'
