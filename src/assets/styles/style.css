@@ -1,15 +1,21 @@
+
+
 @font-face {
     font-family: HelvNeue75;
     src: url(../fonts/HelvNeue75_W1G.woff2);
 }
 
 
+html {
+    position: relative;
+    overflow: auto;
+}
+
 html,body {
     margin: 0;
     padding: 0;
     height: 100%;
-    width: 100%;
-    overflow: auto;    
+    width: 100%;   
 }
 
 .ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper {
@@ -17,7 +23,7 @@ html,body {
 }
 
 .ui-mobile .ui-page-active {
-    overflow: auto;
+    overflow: visible;
 }
 
 .topbar {
@@ -273,4 +279,16 @@ hr{
 
 .is-accordion-submenu-parent > a::after {
     border-color: white transparent transparent !important;
+}
+
+
+
+@media screen and (max-device-width: 320px) {
+
+    .logo_txt { font-size: 14px; }
+}
+
+@media screen and (max-device-width: 420px) and (min-device-width: 360px ) {
+
+    .logo_txt { font-size: 17px; }
 }

@@ -20,7 +20,7 @@ var drawspace = $(".drawspace"),
     last_move="",
     smartphone,
     last_scale,
-    scale = 1,
+    scale = 0.5,
     last_posX = 0,
     last_posY = 0;
 
@@ -34,9 +34,18 @@ $(window).on('beforeunload', function(){
   $(window).scrollLeft(0);
 });
 
+  // $(document).on('swipe', function(e) {
+  //   e.stopPropagation();
+  //   e.preventDefault();
+  // });
+
 $(window).on("load", function (){
 
   $(document).foundation();
+
+
+
+  
 
   // Initialisation globale du contexte
   globalInit();
@@ -92,14 +101,15 @@ $(window).on("load", function (){
   
 
   drawspace.on('mousedown', function(e){
+
     if (smartphone === 0) {
       e.preventDefault();
 
       var handlers = {
         mousemove : function(e){
           e.preventDefault();
-          x=parseInt(e.pageX / bricksize);
-          y=parseInt((e.pageY - topHeight) / bricksize);
+          x=parseInt((e.pageX - drawspace.offset().left) / bricksize);
+          y=parseInt((e.pageY - drawspace.offset().top) / bricksize);
 
           var new_move = x + "-" + y;
 
@@ -125,8 +135,8 @@ $(window).on("load", function (){
 
     // (if no mobile device)
     if (smartphone === 0) {
-      x=parseInt(clickX / bricksize);
-      y=parseInt((clickY - topHeight) / bricksize);
+      x=parseInt((clickX - drawspace.offset().left) / bricksize);
+      y=parseInt((clickY - drawspace.offset().top) / bricksize);
       webcom.updatePos(x,y);
     } else { // (mobile device)
 
@@ -143,9 +153,9 @@ $(window).on("load", function (){
           webcom.updatePos(x,y);
         }
 
-        if (scale === 1) {
+        if (scale === 0.5) {
 
-          last_scale = 1;
+          last_scale = 0.5;
           scale = 2;
 
           var scrollX,
@@ -199,7 +209,8 @@ function globalInit() {
     'min-height': panelheight,
     'width': panelwidth,
     'background' : 'black',
-    'text-shadow' : '0 0 0'
+    'text-shadow' : '0 0 0',
+    'overflow' : 'auto'
   });
 
   $("div").removeClass('ui-panel-dismiss');
@@ -223,8 +234,12 @@ function globalInit() {
   // Initialisation of the drawspace's brick size
   initBrickSize(bricksize+"px");
 
-
-  transcale(0, 0, 0.5);
+  if (smartphone === 1) {
+    transcale(0, 0, 0.5);
+  } else {
+    transcale(0, 0, 1);
+    $('#overlayPanel').panel('open');
+  }
 }
 
 /* Dezoom le drawspace à son état initial */
@@ -233,7 +248,7 @@ function dezoom(x, y, sc) {
   transcale(x, y, sc);
 
   last_scale = 2;      
-  scale = 1;
+  scale = 0.5;
 
   btn_dezoom.hide();
 }
@@ -246,7 +261,8 @@ function initBrickSize(size) {
 
 /* Désactive le scroll quand le panel est ouvert */
 btn_panel.click(function() {
-  ev.disableScroll(scale);
+  if (smartphone === 1)
+    ev.disableScroll(scale);
 });
 
 /* gère la surbrillance d'une couleur active */

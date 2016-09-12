@@ -3,7 +3,8 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!-- content width viewport set to 5000px for enable scroll-x -->
-    <meta name="viewport" content="width=5000, height=device-height, initial-scale=1, user-scalable=no"> 
+    <meta name="viewport" content="width=device-width, minimal-ui, height=device-height, initial-scale=1, user-scalable=no"> 
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="icon" href="data:;base64,=">
     <title>Add your brick !</title>
   </head>
@@ -12,14 +13,13 @@
       <div class="top-bar-title">
         <a href="#">
           <img src="" class="logo_webcom">
-          <span class="logo_txt">
-            <span style="color:#ff7900;">&nbsp;&nbsp;W</span><span style="color:white">ebcom - leg</span><span style="color:#ff7900;">Orange</span>
-          </span>
+          <div class="logo_txt" style="color:white">&nbsp;Flexible DataSync - Leg<span style="color:#ff7900;">Orange</span>
+          </div> 
         </a>
       </div>
       <a href="#overlayPanel" id="btn_panel" class="menu-icon"></a>
     </div>
-    <div id="overlayPanel" data-role="panel" data-dismissible="true" data-display="overlay" data-position-fixed="true" data-position="right">
+    <div id="overlayPanel" data-role="panel" data-swipe-close="false" data-display="overlay" data-position-fixed="true" data-position="right">
       <ul class="vertical menu" data-accordion-menu>
         <li>
           <a id="menu-DT" class="menu-title" href="#">Draw tools</a>

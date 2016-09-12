@@ -6,7 +6,8 @@ var main   = require('../../script.js'),
 
 var mode = main.mode,
 	color = "white",
-	panel = $('#overlayPanel');
+	panel = $('#overlayPanel'),
+	drawspace = $('.drawspace');
 
 module.exports.color = color;
 
@@ -19,9 +20,11 @@ module.exports.dezoom = function() {
 module.exports.disableScroll = function(sc) {
 	if (panel.hasClass('ui-panel-open') === false) {
 		$('html').removeClass('showOverflow').addClass('hideOverflow');
+		drawspace.removeClass('showOverflow').addClass('hideOverflow');
 		$('#btn_dezoom').hide();
 	} else {
 		$('html').removeClass('hideOverflow').addClass('showOverflow');
+		drawspace.removeClass('hideOverflow').addClass('showOverflow');
 		if (sc == 2) {
 			$('#btn_dezoom').show();
 		}
