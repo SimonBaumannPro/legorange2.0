@@ -1,5 +1,3 @@
-
-
 var main   = require('../../script.js'),
 	webcom = require('./webcom_fct.js');
 	init   = require('./init.js');

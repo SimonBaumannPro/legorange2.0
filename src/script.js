@@ -4,7 +4,6 @@
 
 require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
-require('../manifest.json');
 
 var webcom = require('./assets/js/webcom_fct.js'),
     init   = require('./assets/js/init.js'),
