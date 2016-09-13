@@ -59,7 +59,11 @@ const config = {
 			{ 
 			  	test: /\.(eot|gif|woff|woff2|ttf|svg|)(\?\S*)?$/,
 			  	loader: 'url?limit=100000&name=[name].[ext]'
-			}	
+			},
+			{
+      			test: /manifest.json$/,
+      			loader: 'file-loader?name=manifest.json!web-app-manifest-loader'
+    		}	
 		],
 		noParse: [	
 			/jquery\.min\.js$/,
@@ -75,10 +79,13 @@ const config = {
 			$: 'jquery',
 			jQuery: 'jquery'
 		}),
-		new HtmlWebpackPlugin({
-			template: './src/index.html',
-			inject: 'body'
-		}),
+		new HtmlWebpackPlugin(
+			{
+				template: './src/index.html',
+				inject: 'body',
+				favicon: './src/assets/images/icons/webcom_logo.ico'
+			}
+		),
 		new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js'),
 		new webpack.DefinePlugin({
 			__WEBCOM_SERVER__: JSON.stringify(process.env.WS_SERVER || 'https://webcom.orange.com'),
