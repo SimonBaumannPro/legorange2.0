@@ -4,6 +4,7 @@
 
 require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
+require('../manifest.json');
 
 var webcom = require('./assets/js/webcom_fct.js'),
     init   = require('./assets/js/init.js'),
@@ -54,8 +55,11 @@ $(window).on("load", function (){
   btn_dezoom.on('click', function(){
     var offX, offY, scale; 
 
-    offY = $('body').scrollTop();
-    offX = $('body').scrollLeft();
+    offY = ($('body').scrollTop()/4) - (window.innerHeight/2);
+    offX = ($('body').scrollLeft()/4) - (window.innerWidth/2);
+    console.log("------------------");
+    console.log('offX = ' + offX);
+    console.log('offY = ' + offY);
     
     scale = 0.5;
 
@@ -139,7 +143,6 @@ $(window).on("load", function (){
       y=parseInt((clickY - drawspace.offset().top) / bricksize);
       webcom.updatePos(x,y);
     } else { // (mobile device)
-
       if (panel.hasClass('ui-panel-open') === true) {
         e.preventDefault();
         panel.panel("close");
@@ -160,15 +163,27 @@ $(window).on("load", function (){
 
           var scrollX,
               scrollY,
-              viewpWidth = window.innerWidth/2,
-              viewpHeight = window.innerHeight/2,
+              viewpWidth = window.innerWidth/3.5,
+              viewpHeight = window.innerHeight/3.5,
               overflowX = e.clientX - viewpWidth,
-              overflowY = e.clientY - viewpHeight;
-              offX = $('body').scrollLeft() ;
+              overflowY = e.clientY - viewpHeight,
+              offX = $('body').scrollLeft(),
               offY = $('body').scrollTop() ;
 
-          scrollX = clickX + overflowX + offX;     // mouse position at zoom scale 1
-          scrollY = clickY + overflowY + offY;    
+          scrollX = (clickX + overflowX + offX)*2;
+          scrollY = (clickY + overflowY + offY)*2;    
+
+
+          console.log('viewpWidth = ' + viewpWidth);
+          console.log('viewpHeight = ' + viewpHeight);
+          console.log('e.clientX = ' + e.clientX);
+          console.log('e.clientY = ' + e.clientY);
+          console.log('e.pageX = ' + e.pageX);
+          console.log('e.pageY = ' + e.pageY);
+          console.log('overflowX = ' + overflowX);
+          console.log('overflowY = ' + overflowY);
+          console.log('offX = ' + offX);
+          console.log('offY = ' + offY);
 
           btn_dezoom.show();
 
@@ -181,18 +196,20 @@ $(window).on("load", function (){
 
 /* Effectue une translation et un scale sur le drawspace */
 function transcale (x, y, sc) {
-  $('body').scrollLeft(x);
-  $('body').scrollTop(y);
   //drawspace.css('margin-top', topHeight);
   drawspace.css('transform', "scale(" + sc + ")");
   if (sc === 0.5) {
     $('div[data-role="main"]').height(2500);
     $('div[data-role="main"]').width(2500);
     document.querySelector('meta[name=viewport]').setAttribute('content', "width=2500, height=device-height, initial-scale=1, user-scalable=no");
+    $('body').scrollLeft(x);
+    $('body').scrollTop(y);
   } else {
     $('div[data-role="main"]').height(5000);
     $('div[data-role="main"]').width(5000);
     document.querySelector('meta[name=viewport]').setAttribute('content', "width=5000, height=device-height, initial-scale=1, user-scalable=no");
+    $('body').scrollLeft(x);
+    $('body').scrollTop(y);
   }
 }
 
