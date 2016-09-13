@@ -22,7 +22,9 @@ const config = {
 				 'jq-confirm-css',
 				 'imports?exports=>false&module=>false!webcom'
 		],
-		script: ['./src/script.js']
+		script: [
+		'file?name=manifest.json!./manifest.json',
+		'./src/script.js']
 	},
 	output: {
 		filename: 'bundle.js',
@@ -59,11 +61,7 @@ const config = {
 			{ 
 			  	test: /\.(eot|gif|woff|woff2|ttf|svg|)(\?\S*)?$/,
 			  	loader: 'url?limit=100000&name=[name].[ext]'
-			},
-			{
-      			test: /manifest.json$/,
-      			loader: 'file-loader?name=manifest.json!web-app-manifest-loader'
-    		}	
+			}	
 		],
 		noParse: [	
 			/jquery\.min\.js$/,
