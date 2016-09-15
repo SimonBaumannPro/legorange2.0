@@ -43,10 +43,6 @@ $(window).on("load", function (){
 
   $(document).foundation();
 
-
-
-  
-
   // Initialisation globale du contexte
   globalInit();
 
@@ -65,11 +61,10 @@ $(window).on("load", function (){
     dezoom(offX, offY, scale);
   });
   
-  // $(window).resize(function() {
-  //    globalInit();
-  //    bricksize = parseInt($(window).width()/100);
-  //    location.reload();
-  //  });  
+  $(window).resize(function() {
+     //globalInit();
+     // location.reload();
+   });  
 
   // $(function() {
   //   $("body").swipe( {
@@ -195,7 +190,7 @@ $(window).on("load", function (){
 
 /* Effectue une translation et un scale sur le drawspace */
 function transcale (x, y, sc) {
-  //drawspace.css('margin-top', topHeight);
+  drawspace.css('margin-top', topHeight);
   drawspace.css('transform', "scale(" + sc + ")");
   if (sc === 0.5) {
     $('div[data-role="main"]').height(2500);
@@ -215,6 +210,8 @@ function transcale (x, y, sc) {
 /* Initialisation du contexte global (interface) */
 function globalInit() {
 
+  //$('.topbar').css('height', '10vh');
+
   topHeight = $('.topbar').outerHeight();
   var panel = $('[data-role=panel]').height();
   var panelheight = topHeight - panel;
@@ -222,7 +219,7 @@ function globalInit() {
 
   $('.ui-panel').css({
     'top': topHeight,
-    'min-height': panelheight,
+    'min-height' : 'none !important',
     'width': panelwidth,
     'background' : 'black',
     'text-shadow' : '0 0 0',
@@ -239,6 +236,15 @@ function globalInit() {
 
   btn_dezoom.hide();
   drawspace.css('margin-top', topHeight);
+
+  var btn_menuicon = $('.menu-icon').height();
+  var menutitle = $('.top-bar-title').height();
+  var margin_menuicon = ($('.topbar').height() - btn_menuicon)/2;
+  var margin_menutitle = ($('.topbar').height() - menutitle)/2;
+  console.log(topHeight, btn_menuicon, margin_menuicon);
+  $('.menu-icon').css('margin-top', margin_menuicon +'px');
+  $('.top-bar-title').css('margin-top', margin_menutitle +'px');
+
 
   /* Disable Ctrl+mouseWheel zoom on cross-browser */
   $(window).bind('mousewheel DOMMouseScroll', function (event) {
