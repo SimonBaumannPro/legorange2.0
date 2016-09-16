@@ -5,6 +5,7 @@
 require('./assets/styles/app.scss');
 require('./assets/styles/style.css');
 
+
 var webcom = require('./assets/js/webcom_fct.js'),
     init   = require('./assets/js/init.js'),
     ev     = require('./assets/js/events.js');
@@ -52,9 +53,9 @@ $(window).on("load", function (){
 
     offY = ($('body').scrollTop()/4) - (window.innerHeight/2);
     offX = ($('body').scrollLeft()/4) - (window.innerWidth/2);
-    console.log("------------------");
-    console.log('offX = ' + offX);
-    console.log('offY = ' + offY);
+    // console.log("------------------");
+    // console.log('offX = ' + offX);
+    // console.log('offY = ' + offY);
     
     scale = 0.5;
 
@@ -101,11 +102,11 @@ $(window).on("load", function (){
   drawspace.on('mousedown', function(e){
 
     if (smartphone === 0) {
-      e.preventDefault();
+      if (e.defaultPrevented ) return;
 
       var handlers = {
         mousemove : function(e){
-          e.preventDefault();
+          if (e.defaultPrevented ) return;
           x=parseInt((e.pageX - drawspace.offset().left) / bricksize);
           y=parseInt((e.pageY - drawspace.offset().top) / bricksize);
 
@@ -138,8 +139,9 @@ $(window).on("load", function (){
       webcom.updatePos(x,y);
     } else { // (mobile device)
       if (panel.hasClass('ui-panel-open') === true) {
-        e.preventDefault();
+        if (e.defaultPrevented ) return;
         panel.panel("close");
+        btn_dezoom.show();
         $('html').removeClass('hideOverflow').addClass('showOverflow');
       } else {
 
@@ -168,16 +170,16 @@ $(window).on("load", function (){
           scrollY = (clickY + overflowY + offY)*2;    
 
 
-          console.log('viewpWidth = ' + viewpWidth);
-          console.log('viewpHeight = ' + viewpHeight);
-          console.log('e.clientX = ' + e.clientX);
-          console.log('e.clientY = ' + e.clientY);
-          console.log('e.pageX = ' + e.pageX);
-          console.log('e.pageY = ' + e.pageY);
-          console.log('overflowX = ' + overflowX);
-          console.log('overflowY = ' + overflowY);
-          console.log('offX = ' + offX);
-          console.log('offY = ' + offY);
+          // console.log('viewpWidth = ' + viewpWidth);
+          // console.log('viewpHeight = ' + viewpHeight);
+          // console.log('e.clientX = ' + e.clientX);
+          // console.log('e.clientY = ' + e.clientY);
+          // console.log('e.pageX = ' + e.pageX);
+          // console.log('e.pageY = ' + e.pageY);
+          // console.log('overflowX = ' + overflowX);
+          // console.log('overflowY = ' + overflowY);
+          // console.log('offX = ' + offX);
+          // console.log('offY = ' + offY);
 
           btn_dezoom.show();
 
@@ -195,13 +197,13 @@ function transcale (x, y, sc) {
   if (sc === 0.5) {
     $('div[data-role="main"]').height(2500);
     $('div[data-role="main"]').width(2500);
-    document.querySelector('meta[name=viewport]').setAttribute('content', "width=2500, height=device-height, initial-scale=1, user-scalable=no");
+    document.querySelector('meta[name=viewport]').setAttribute('content', "width=device-width, height=device-height, initial-scale=1, user-scalable=no");
     $('body').scrollLeft(x);
     $('body').scrollTop(y);
   } else {
     $('div[data-role="main"]').height(5000);
     $('div[data-role="main"]').width(5000);
-    document.querySelector('meta[name=viewport]').setAttribute('content', "width=5000, height=device-height, initial-scale=1, user-scalable=no");
+    document.querySelector('meta[name=viewport]').setAttribute('content', "width=device-width, height=device-height, initial-scale=1, user-scalable=no");
     $('body').scrollLeft(x);
     $('body').scrollTop(y);
   }
@@ -244,12 +246,13 @@ function globalInit() {
   console.log(topHeight, btn_menuicon, margin_menuicon);
   $('.menu-icon').css('margin-top', margin_menuicon +'px');
   $('.top-bar-title').css('margin-top', margin_menutitle +'px');
+  $('.ui-page-theme-a').css('text-shadow', '0 0 0');
 
 
   /* Disable Ctrl+mouseWheel zoom on cross-browser */
   $(window).bind('mousewheel DOMMouseScroll', function (event) {
     if (event.ctrlKey === true) {
-      event.preventDefault();
+      if (event.defaultPrevented ) return;
     }
   });
 

@@ -1,6 +1,6 @@
 @font-face {
-    font-family: HelvNeue75;
-    src: url(../fonts/HelvNeue75_W1G.woff2) format('woff2');
+    font-family: "HelvNeue75";
+    src: url('../fonts/HelvNeue75_W1G.woff2') format('woff2');
 }
 
 html {
@@ -15,7 +15,7 @@ html,body {
     width: 100%;   
 }
 
-.ui-panel .ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper {
+.ui-page-theme-a .ui-panel .ui-overlay-a .ui-panel-wrapper {
     text-shadow: 0 0 0 !important;
 }
 
@@ -49,7 +49,7 @@ html,body {
     width:5000px;
     height:5000px;
     padding: 0;
-    background: url(../images/lego_orange_tile.png) repeat;
+    background: url('../images/lego_orange_tile.png') repeat;
     background-size: 15px 15px;
     z-index: 0;
     transform-origin: 0 0 0; /* pour que les transfo se fassent toujours à partir du point (0,0)*/
@@ -61,7 +61,7 @@ html,body {
     height: 20px;
     position: absolute;
     z-index: 2;
-    background: url(../images/lego_orange_tile_white.png) no-repeat;
+    background: url('../images/lego_orange_tile_white.png') no-repeat;
     background-size: 16px 16px;
     background-blend-mode: multiply;    /*pour l'affichage des briques en couleur */
     /*outline: 2px solid black;*/
@@ -76,21 +76,25 @@ html,body {
 }
 
 .dezoom {
-    color:white;
-    padding-bottom: 14px;
     width: 100px !important;
     height: 100px !important;
     border-radius: 50%;
-    background: url(../images/zoom_icon.png) no-repeat;
+    background: url('../images/zoom_icon.png') no-repeat;
     background-size: 100% 100%;
+}
+
+.dezoom:hover {
+    background-color: none !important;
 }
 
 
 .logo_webcom {
     width: 30px;
     height: 30px;
-    background: url(../images/icons/logo_webcom.png);
+    content: url('../images/icons/logo_webcom.png') no-repeat;
+    background: url('../images/icons/logo_webcom.png') no-repeat;
     background-size: 100% 100%;
+    border : 1px solid white !important;
 }
 
 .logo_txt {
@@ -121,7 +125,7 @@ hr{
     /*border-radius: 20px;*/
     background: url(../images/lego_orange_tile_white.png) no-repeat;
     background-size: 30px 30px;
-    background-blend-mode: multiply;    /*pour l'affichage des briques en couleur */
+    background-blend-mode: multiply;    /*pour l'affichage des briques en couleur*/ 
     /*outline: 2px solid black;*/
 }
 
