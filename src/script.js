@@ -113,7 +113,7 @@ $(window).on("load", function (){
           var new_move = x + "-" + y;
 
           // Disable brick overflow outside drawspace
-          if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < drawspace.height() && e.pageX > 0 && e.pageY > 0) {
+          if (new_move!=last_move && e.pageX < drawspace.width() && e.pageY < (drawspace.height() + topHeight) && e.pageX > 0 && e.pageY > 0) {
             webcom.updatePos(x,y);
           }
           last_move=new_move;
@@ -195,14 +195,14 @@ function transcale (x, y, sc) {
   drawspace.css('margin-top', topHeight);
   drawspace.css('transform', "scale(" + sc + ")");
   if (sc === 0.5) {
-    $('div[data-role="main"]').height(2500);
-    $('div[data-role="main"]').width(2500);
+    $('div[data-role="main"]').height(2490);
+    $('div[data-role="main"]').width(2490);
     document.querySelector('meta[name=viewport]').setAttribute('content', "width=device-width, height=device-height, initial-scale=1, user-scalable=no");
     $('body').scrollLeft(x);
     $('body').scrollTop(y);
   } else {
-    $('div[data-role="main"]').height(5000);
-    $('div[data-role="main"]').width(5000);
+    $('div[data-role="main"]').height(4980);
+    $('div[data-role="main"]').width(4980);
     document.querySelector('meta[name=viewport]').setAttribute('content', "width=device-width, height=device-height, initial-scale=1, user-scalable=no");
     $('body').scrollLeft(x);
     $('body').scrollTop(y);

@@ -84,7 +84,7 @@ const config = {
 				favicon: './src/assets/images/icons/webcom_logo.ico'
 			}
 		),
-		new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js'),
+		new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js', Infinity),
 		new webpack.DefinePlugin({
 			__WEBCOM_SERVER__: JSON.stringify(process.env.WS_SERVER || 'https://webcom.orange.com'),
 			__NAMESPACE__: JSON.stringify(process.env.NAMESPACE || 'legorange')

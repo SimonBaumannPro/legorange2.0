@@ -46,8 +46,8 @@ html,body {
 .drawspace {
     position: relative;
     overflow: hidden;
-    width:5000px;
-    height:5000px;
+    width:4980px;
+    height:4980px;
     padding: 0;
     background: url('../images/lego_orange_tile.png') repeat;
     background-size: 15px 15px;
@@ -284,6 +284,15 @@ hr{
     border-color: white transparent transparent !important;
 }
 
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+     -khtml-user-select: none; /* Konqueror */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  not supported by any browser */
+}
 
 
 @media screen and (min-device-width: 320px) and (max-device-width: 369px) {
