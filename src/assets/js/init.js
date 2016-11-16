@@ -10,7 +10,7 @@ var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.
 
 /* Détecte si l'application est utilisé sur mobile/tablettes ou PC */
 module.exports.detectDevice = function() {
-  if((is_mobile && isMobile) || ((navigator.userAgent.toLowerCase().indexOf('firefox') > -1) && is_mobile)) {
+  if (is_mobile && isMobile) {
     //$('body').css('position', 'absolute');
     //$('body').css('overflow', 'auto');
     //offCanvas.addClass('reveal-for-large');

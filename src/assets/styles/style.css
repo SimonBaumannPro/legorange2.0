@@ -1,6 +1,8 @@
 @font-face {
     font-family: "HelvNeue75";
-    src: url('../fonts/HelvNeue75_W1G.woff2') format('woff2');
+    src: url('../fonts/HelvNeue75_W1G.woff2') format('woff2'),
+         url('../fonts/HelvNeue75_W1G.woff') format('woff'),
+         url('../fonts/HelvNeue75_W1G.ttf') format('truetype');
 }
 
 html {
