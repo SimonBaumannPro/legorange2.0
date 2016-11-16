@@ -22,7 +22,7 @@
     "webcom-reach": "^2.0.0"
   },
   "devDependencies": {
-    "bower": "~1.7.7",
+    "bower": "~1.8.0",
     "cross-env": "^2.0.0",
     "css-loader": "^0.23.1",
     "eslint": "^3.1.1",
