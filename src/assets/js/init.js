@@ -14,6 +14,14 @@ if (is_mobile) console.log('is_mobile');
 if (isMobile) console.log('isMobile');
 
 
+  
+
+if (navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv 11/)))
+{
+  console.log("IE");
+  $(".colors").css('padding-top','22px');
+}
+
 /* Détecte si l'application est utilisé sur mobile/tablettes ou PC */
 module.exports.detectDevice = function() {
   if (is_mobile || (isMobile && is_firefox)) {
@@ -24,7 +32,10 @@ module.exports.detectDevice = function() {
 console.log('mobile');
     return 1;
   } else {
-    console.log('PC');
+
+    $('#DT').attr('aria-expanded', 'true');
+    $('.ul-drawTools').css('display', 'block');
+    console.log('PC'); 
     return 0;
   }
 };

@@ -100,7 +100,6 @@ $(window).on("load", function (){
   
 
   drawspace.on('mousedown', function(e){
-console.log('mousedown');
     if (smartphone === 0) {
       if (e.defaultPrevented ) return;
 

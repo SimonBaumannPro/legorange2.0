@@ -23,7 +23,7 @@ const config = {
 				 'imports?exports=>false&module=>false!webcom'
 		],
 		script: [
-		'file?name=manifest.json!./manifest.json',
+		// 'file?name=manifest.json!./manifest.json',
 		'./src/script.js']
 	},
 	output: {

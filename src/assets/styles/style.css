@@ -51,7 +51,7 @@ html,body {
     width:4980px;
     height:4980px;
     padding: 0;
-    background: url('../images/bricks/lego_orange_tile.png') repeat;
+    background: url('../images/bricks/orangeBrick.png') repeat;
     z-index: 0;
     transform-origin: 0 0 0; /* pour que les transfo se fassent toujours à partir du point (0,0)*/
 }
@@ -62,8 +62,8 @@ html,body {
     height: 20px;
     position: absolute;
     z-index: 2;
-    background: url('../images/bricks/lego_orange_tile_white.png') no-repeat;
-    background-blend-mode: multiply;    /*pour l'affichage des briques en couleur */
+    background: url('../images/bricks/orangeBrick.png') no-repeat;
+    /*background-blend-mode: multiply;    /*pour l'affichage des briques en couleur */
     /*outline: 2px solid black;*/
 }
 
@@ -123,14 +123,15 @@ hr{
     position: absolute;
     z-index: 1;
     /*border-radius: 20px;*/
-    background: url(../images/bricks/lego_orange_tile_white.png) no-repeat;
+    /* background: url('../images/bricks/whiteBrick.png') no-repeat; */
     background-size: 30px 30px;
-    background-blend-mode: multiply;    /*pour l'affichage des briques en couleur*/ 
+    /*background-blend-mode: multiply;    /*pour l'affichage des briques en couleur*/ 
     /*outline: 2px solid black;*/
 }
 
 .white {
-	background-color: white;
+	background: url('../images/bricks/whiteBrick.png');
+    background-size: 30px 30px;
 }
 
 .black {
@@ -138,23 +139,28 @@ hr{
 }
 
 .blue {
-    background-color: #0048aa;
+    background: url('../images/bricks/blueBrick.png');
+    background-size: 30px 30px;
 }
 
 .red {
-    background-color: #f40026;
+    background: url('../images/bricks/redBrick.png');
+    background-size: 30px 30px;
 }
 
 .yellow {
-    background-color: #ffdc00;
+    background: url('../images/bricks/yellowBrick.png');
+    background-size: 30px 30px;
 }
 
 .green {
-    background-color: #008a40;
+    background: url('../images/bricks/greenBrick.png');
+    background-size: 30px 30px;
 }
 
-.brown {
-    background-color: #694027;
+.grey {
+    background: url('../images/bricks/greyBrick.png');
+    background-size: 30px 30px;
 }
 
 .colors {
