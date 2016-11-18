@@ -51,8 +51,7 @@ html,body {
     width:4980px;
     height:4980px;
     padding: 0;
-    background: url('../images/lego_orange_tile.png') repeat;
-    background-size: 15px 15px;
+    background: url('../images/bricks/lego_orange_tile.png') repeat;
     z-index: 0;
     transform-origin: 0 0 0; /* pour que les transfo se fassent toujours à partir du point (0,0)*/
 }
@@ -63,8 +62,7 @@ html,body {
     height: 20px;
     position: absolute;
     z-index: 2;
-    background: url('../images/lego_orange_tile_white.png') no-repeat;
-    background-size: 16px 16px;
+    background: url('../images/bricks/lego_orange_tile_white.png') no-repeat;
     background-blend-mode: multiply;    /*pour l'affichage des briques en couleur */
     /*outline: 2px solid black;*/
 }
@@ -81,7 +79,7 @@ html,body {
     width: 100px !important;
     height: 100px !important;
     border-radius: 50%;
-    background: url('../images/zoom_icon.png') no-repeat;
+    background: url('../images/icons/zoom_icon.png') no-repeat;
     background-size: 100% 100%;
 }
 
@@ -125,7 +123,7 @@ hr{
     position: absolute;
     z-index: 1;
     /*border-radius: 20px;*/
-    background: url(../images/lego_orange_tile_white.png) no-repeat;
+    background: url(../images/bricks/lego_orange_tile_white.png) no-repeat;
     background-size: 30px 30px;
     background-blend-mode: multiply;    /*pour l'affichage des briques en couleur*/ 
     /*outline: 2px solid black;*/

@@ -59,7 +59,7 @@ const config = {
         		loaders: ["style", "css", "sass"]
       		},
 			{ 
-			  	test: /\.(eot|gif|woff|woff2|ttf|svg|)(\?\S*)?$/,
+			  	test: /\.(eot|gif|woff|woff2|ttf|svg|ico)(\?\S*)?$/,
 			  	loader: 'url?limit=100000&name=[name].[ext]'
 			}	
 		],
