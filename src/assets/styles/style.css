@@ -1,53 +1,108 @@
-
-.fixed {
-    position: fixed;
-
-    width:100vw;
+@font-face {
+    font-family: "HelvNeue75";
+    src: url('../fonts/HelvNeue75_W1G.woff2') format('woff2'),
+         url('../fonts/HelvNeue75_W1G.woff') format('woff'),
+         url('../fonts/HelvNeue75_W1G.ttf') format('truetype');
 }
 
-.plaquette {
+html {
+    position: relative;
+    overflow: auto;
+}
+
+html,body {
+    margin: 0;
     padding: 0;
-    margin-top: 0px;         
+    height: 100%;
+    width: 100%;   
+}
+
+.ui-page-theme-a .ui-panel .ui-overlay-a .ui-panel-wrapper {
+    text-shadow: 0 0 0 !important;
+}
+
+.ui-mobile .ui-page-active {
+    overflow: visible;
+}
+
+.ui-panel {
+    min-height: 0 !important;
+}
+
+.topbar {
+    position: fixed;
     width:100vw;
-    height:100vh;
-    background: url(../img/tileOrange.jpg) repeat;
-    background-size: 40px 40px;
-    z-index: -1;
+    top:0;
+    z-index:2;
+    border-bottom: 0.5px solid;
+}
+
+.hideOverflow {
+    overflow : hidden !important;
+}
+
+.showOverflow {
+    overflow: auto !important;
+}
+
+.drawspace {
+    position: relative;
+    overflow: hidden;
+    width:4980px;
+    height:4980px;
+    padding: 0;
+    background: url('../images/bricks/orangeBrick.png') repeat;
+    z-index: 0;
+    transform-origin: 0 0 0; /* pour que les transfo se fassent toujours à partir du point (0,0)*/
+}
+
+.brick {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    z-index: 2;
+    background: url('../images/bricks/orangeBrick.png') no-repeat;
+    /*background-blend-mode: multiply;    /*pour l'affichage des briques en couleur */
+    /*outline: 2px solid black;*/
 }
 
 .zoomspace {
     position: fixed;
-    bottom:20px;
+    bottom:0.5px;
     left:20px;
-    width:130px;
+    width:56px;
+    z-index: 2;
 }
 
-
-.btn_dezoom {
-    background-color: black; /* Green */
-    border: none;
-    color: #FFA500;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 15px;
-
+.dezoom {
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 50%;
+    background: url('../images/icons/zoom_icon.png') no-repeat !important;
+    background-size: 100% 100%;
 }
+
+.dezoom:hover {
+    background-color: none !important;
+}
+
 
 .logo_webcom {
-    width: 38px;
-    height: 38px;
+    width: 30px;
+    height: 30px;
+    content: url('../images/icons/logo_webcom.png') no-repeat;
+    background: url('../images/icons/logo_webcom.png') no-repeat;
+    background-size: 100% 100%;
+    border : 1px solid white !important;
 }
 
 .logo_txt {
-    font-family: HelvNeue35,Helvetica,Arial,sans-serif;
-    font-size: 1.5rem;
+    font-family: HelvNeue75;
+    font-size: 20px;
     vertical-align: middle;
     display: inline-block!important;
 }
-
 
 hr{
     margin:0px;
@@ -59,23 +114,24 @@ hr{
     cursor:pointer;
 }
 
-.brick {
+.brickMenu {
     cursor: pointer;
     width: 30px;
     height: 30px;
-    margin-right: 10px;
-    margin-left: 10px;
+    /*margin-right: 10px;
+    margin-left: 10px; */
     position: absolute;
-    z-index: 10;
+    z-index: 1;
     /*border-radius: 20px;*/
-    background: url(../img/tileWhite.jpg) no-repeat;
+    /* background: url('../images/bricks/whiteBrick.png') no-repeat; */
     background-size: 30px 30px;
-    background-blend-mode: multiply;    /*pour l'affichage des briques en couleur */
-    outline: 2px solid black;
+    /*background-blend-mode: multiply;    /*pour l'affichage des briques en couleur*/ 
+    /*outline: 2px solid black;*/
 }
 
 .white {
-	background-color: white;
+	background: url('../images/bricks/whiteBrick.png');
+    background-size: 30px 30px;
 }
 
 .black {
@@ -83,23 +139,28 @@ hr{
 }
 
 .blue {
-    background-color: #0048aa;
+    background: url('../images/bricks/blueBrick.png');
+    background-size: 30px 30px;
 }
 
 .red {
-    background-color: #f40026;
+    background: url('../images/bricks/redBrick.png');
+    background-size: 30px 30px;
 }
 
 .yellow {
-    background-color: #ffdc00;
+    background: url('../images/bricks/yellowBrick.png');
+    background-size: 30px 30px;
 }
 
 .green {
-    background-color: #008a40;
+    background: url('../images/bricks/greenBrick.png');
+    background-size: 30px 30px;
 }
 
-.brown {
-    background-color: #694027;
+.grey {
+    background: url('../images/bricks/greyBrick.png');
+    background-size: 30px 30px;
 }
 
 .colors {
@@ -108,18 +169,19 @@ hr{
     margin:auto;
 }
 
-.colors .brick {
+.colors .brickMenu {
     cursor: pointer;
     position: inherit;
     display: inline-block;
+    margin: 7px;
 }
 
 .colors .active {
-    outline: 5px solid black;
+    outline: 3px solid white;
 }
 
 .ul-drawTools {
-    height:200px!important;
+    height:200px;
     margin-left:0px!important;
     padding-top:0px!important;
 }
@@ -132,49 +194,91 @@ hr{
     padding: 14px;
     margin-left: 4px;
     margin-top: 4px;
+    z-index: 5;
 }
 
 .container-titlebar-menu {
     background-color: black;
     border-radius: 10px;
-    width:auto;
-    height:auto;
-    padding: 14px;
-    margin-right: 22px;
-    margin-top: 12px;
+    width:70px;
+    height:60px;
+    margin-right: 10px;
+    margin-top: 5px;
+    text-align: center !important;
+    z-index: 5;
+}
+
+.menu-icon {
+    width:25px;
+    float: right !important;
+    position: fixed !important;
+    z-index: 8;
+    right: 15px;
+}
+
+.drawTools-buttons-container {
+    background-color: black;
+    height: 50%
+}
+
+.container-color {
+    background-color: black;
+    height: 50%;
+    display: flex;
 }
 
 .container {
     padding-top: -10px;
     width: auto;
-    height:100%;
+    height: 100%;
+    display: block;
     overflow:hidden;
     position: relative;
-    background-color: blue;
 }
 
 .tools-button {
-    margin-top:18px; 
-    margin-bottom:18px; 
-    margin-left:48px;
+    margin-top: 18px !important;  
+    margin-bottom: 18px !important; 
+    margin-left: 28px !important;
+    width: 4.2em;
+    height: 4.2em;
     position: relative;
-    background-color:#808080;
-    border-radius: 15px;
+    background-color: transparent !important;
 }
 
+.tools-button:hover {
+    background-color: transparent;
+}
+
+.tools-icons {
+    font-size: 30px;
+    color: black;
+    position: absolute;
+    margin-top: 8px;
+}
+
+.whiteSquare {
+    top: 0;
+    font-size: 4em;
+    color: #ff7900;
+}
 
 .menu-title {
     height: 77.778px;
-    font-size:40px;
-    vertical-align:middle;
-    text-align:center;
-    padding-top:20px!important;
+    font-size: 28px;
+    text-align: center;
+    padding-top: 20px!important;
+    outline: 0;
+    font-family: HelvNeue75 !important; 
+    color: #fff !important;
+    letter-spacing: -.01em !important;
+    border-bottom: 1px solid white;
 }
 
-.submenu {
+.menu-submenu {
     height: 40px;
-    padding-top:10px;
-    vertical-align:middle;
+    padding-top: 10px;
+    vertical-align: middle;
 }
 
 .submenu .title {
@@ -182,91 +286,79 @@ hr{
     color:gray;   
 }
 
-
-
-.drawTools {
-
-
-
-}
-    
-.options{
-   /* position: fixed;
-    overflow:auto;
-    */
-    cursor:move;
-    position:fixed;
-    text-align: right;
-    padding:0px;
-    border: 1px solid black;
-    background-color: white;
-    color: black;
-    z-index: 100;
-    box-shadow: 3px 3px 10px 0px #000000;
+.is-accordion-submenu-parent > a::after {
+    border-color: white transparent transparent !important;
 }
 
-.tools {
-    left: 20px;
-    top: 20px;
-    text-align: center;
-    width: auto !important;;
-    height: auto !important;;
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+     -khtml-user-select: none; /* Konqueror */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  not supported by any browser */
 }
 
 
-.close {
-    position: absolute;
-    cursor: pointer;
-    right: 5px;
-    top: 5px;
-}
-    
-    
-.button, .little_button {
-    cursor: pointer;
-}
+@media screen and (min-device-width: 320px) and (max-device-width: 369px) {
 
-.owner {
-}
+    .logo_txt { font-size: 14px; }
 
-.view_owner {
-    border: 2px solid black;
-    margin-left: -2px;
-    margin-top: -2px;
+    .topbar {
+        height: 10vh;
+        padding: 1.5vh;
+    }
+    .menu-icon {
+        margin-right: 2px;
+    }
+    .dezoom {
+        width: 80px !important;
+        height: 80px !important;
+    }
 }
 
-.simple_login {
-    top:20px;
-    left:200px;
+@media screen and (min-device-width: 370px ) and (max-device-width: 429px)  {
+    .logo_txt { font-size: 17px; }
+
+    .topbar {
+        height: 10vh;
+        padding: 2.5vh;
+    }
+    .menu-icon {
+        -ms-transform: scale(1.25); /* IE 9 */
+        -webkit-transform: scale(1.25); /* Chrome, Safari, Opera */
+        transform: scale(1.25);
+        margin-right: 8px;
+    }
+    .dezoom {
+        width: 90px !important;
+        height: 90px !important;
+    }
 }
 
-.simple_register {
-    top:200px;
-    left:200px;
-}
 
-.error {
-    font-weight: bold;
-    color: red;
-}
+@media screen and (min-device-width: 530px ) and (max-device-width: 600px)  {
+    .logo_txt { font-size: 25px; }
 
+    .logo_webcom {
+        width: 45px;
+        height: 45px;
+    }
 
-.preview_box {
-    right: 40px;
-    top: 40px;
-}
+    .topbar {
+        height: 10vh;
+        padding: 2.5vh;
+    }
+    .menu-icon {
+        -ms-transform: scale(1.5); /* IE 9 */
+        -webkit-transform: scale(1.5); /* Chrome, Safari, Opera */
+        transform: scale(1.5);
+        margin-right: 15px;
+    }
 
-#preview_div {
-    background-color: #F60;
-    padding: 0;
-    margin: 0;         
-    width:300px;
-    height:300px;
-}
-
-.preview_brick {
-    width:1px;
-    z-index: 10;
-    height:1px;
-    position: absolute;
+    .dezoom {
+        width: 125px !important;
+        height: 125px !important;
+    }
 }
