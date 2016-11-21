@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- content width viewport set to 4980 for enable scroll-x -->
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no, minimal-ui"> 
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <!--<link rel="icon" href="data:;base64,\">-->
+    <title>Add your brick !</title>
+  <link rel="shortcut icon" href="/legorange2.0/webcom_logo.ico"><link href="/legorange2.0/vendor.css" rel="stylesheet"><link href="/legorange2.0/script.css" rel="stylesheet"></head>
+  <body class="noselect">
+    <div class="top-bar topbar">
+      <div class="top-bar-title">
+        
+        <a href="#"> 
+          <img class="logo_webcom"/>
+          <div class="logo_txt" style="color:white">&nbsp;Flexiiiiible DataSync - Leg<span style="color:#ff7900;">Orange</span>
+          </div> 
+        </a>
+
+      </div>
+      <a href="#overlayPanel" id="btn_panel" class="menu-icon"></a>
+    </div>
+    <div id="overlayPanel" data-role="panel" data-swipe-close="false" data-display="overlay" data-position-fixed="true" data-position="right">
+      <ul class="vertical menu" data-accordion-menu>
+        <li id='DT'>
+          <a id="menu-DT" class="menu-title" href="#">Draw tools</a>
+          <ul class="ul-drawTools">
+            <div class="container">
+              <div class="drawTools-buttons-container">
+                <span id="draw"  class="mode fa-stack fa-lg button fa-2x tools-button">
+                  <i class="fa fa-square fa-stack-2x whiteSquare"></i>
+                  <i class="fa fa-pencil fa-stack-1x tools-icons"></i>
+                </span>
+                <span id="erase" class="mode fa-stack fa-lg button fa-2x tools-button">
+                  <i class="fa fa-square fa-stack-2x whiteSquare"></i>
+                  <i class="fa fa-eraser fa-stack-1x tools-icons"></i>
+                </span>
+                <span id="eraseAll" class="mode fa-stack fa-lg button fa-2x tools-button">
+                  <i class="fa fa-square fa-stack-2x whiteSquare"></i>
+                  <i class="fa fa-trash fa-stack-1x tools-icons"></i>
+                </span>
+              </div>
+              <div class="container-color">
+                <div class="colors">
+                  <span class="brickMenu white active"></span>
+                  <span class="brickMenu green"></span>
+                  <span class="brickMenu red"></span>
+                  <span class="brickMenu grey"></span>
+                  <span class="brickMenu blue"></span/>
+                  <span class="brickMenu yellow"></span>
+                </div>
+              </div> 
+            </div>
+          </ul>
+        </li>
+        <li>
+          <a class="menu-title" href="#">Social</a>
+          <ul style="height:100px">
+            <li class="menu-submenu">
+              <a class="title" href="#">Chat</a>
+            </li>
+            <li class="menu-submenu">
+              <a class="title" href="#">Users</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a class="menu-title" href="#">Webcom</a>
+          <ul class="text-color: rgb(33, 153, 232)"><br/>
+            <li><a target="_blank" style="font-size: 16px; text-align: center; color: #FF4500" href = "http://webcom.forge.orange-labs.fr">About Webcom</a></li>
+          </ul>
+        </li>
+          <!--<div style="background-color:white; height:1000px; width:100%;"></div>-->   
+      </ul>
+    </div>
+    <div data-role="main">
+      <div class="drawspace" style="-moz-user-select: none;" unselectable="on" ></div>  
+      <div class="zoomspace">
+        <div id="btn_dezoom" type="button" class="dezoom button"></div> 
+      </div>
+    </div>
+  <script type="text/javascript" src="/legorange2.0/vendor.bundle.js"></script><script type="text/javascript" src="/legorange2.0/script.js"></script></body>
+</html>
