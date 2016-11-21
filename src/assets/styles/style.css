@@ -79,7 +79,7 @@ html,body {
     width: 100px !important;
     height: 100px !important;
     border-radius: 50%;
-    background: url('../images/icons/zoom_icon.png') no-repeat;
+    background: url('../images/icons/zoom_icon.png') no-repeat !important;
     background-size: 100% 100%;
 }
 

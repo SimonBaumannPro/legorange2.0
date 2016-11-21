@@ -3,6 +3,7 @@ const process = require('process');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const VendorChunkPlugin = require('webpack-vendor-chunk-plugin');
 
 
 const config = {
@@ -27,7 +28,7 @@ const config = {
 		'./src/script.js']
 	},
 	output: {
-		filename: 'bundle.js',
+		filename: '[name].js',
 		path: path.join(__dirname, './dist'),
 		publicPath: process.env.PUBLIC_PATH || '/'
 	},
@@ -85,6 +86,7 @@ const config = {
 			}
 		),
 		new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js', Infinity),
+		new VendorChunkPlugin('vendor'),
 		new webpack.DefinePlugin({
 			__WEBCOM_SERVER__: JSON.stringify(process.env.WS_SERVER || 'https://webcom.orange.com'),
 			__NAMESPACE__: JSON.stringify(process.env.NAMESPACE || 'legorange')

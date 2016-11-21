@@ -29,6 +29,7 @@ module.exports.detectDevice = function() {
     //$('body').css('overflow', 'auto');
     //offCanvas.addClass('reveal-for-large');
     //$('#btn_panel').hide();
+    $('.dezoom').css('background-color','none');
 console.log('mobile');
     return 1;
   } else {
